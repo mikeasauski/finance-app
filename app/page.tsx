@@ -1,7 +1,6 @@
 "use client";
 
 import Dashboard from "@/components/dashboard/Dashboard";
-import RecentTransactions from "@/components/dashboard/RecentTransactions";
 import { useFinance } from "@/contexts/FinanceContext";
 
 export default function Home() {
@@ -15,7 +14,6 @@ export default function Home() {
             </div>
 
             <Dashboard />
-            <RecentTransactions transactions={transactions} />
         </div>
     );
 }

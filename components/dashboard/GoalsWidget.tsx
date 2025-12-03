@@ -3,12 +3,20 @@
 import React from "react";
 import { Plane, Car, Plus } from "lucide-react";
 
+import { useRouter } from "next/navigation";
+
 export default function GoalsWidget() {
+    const router = useRouter();
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h3 className="font-semibold text-gray-800">Meus Objetivos</h3>
-                <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                <button
+                    onClick={() => router.push('/planning')}
+                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                    title="Gerenciar Objetivos"
+                >
                     <Plus size={20} className="text-blue-600" />
                 </button>
             </div>

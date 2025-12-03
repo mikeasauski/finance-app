@@ -1,20 +1,24 @@
 "use client";
 
 import { CreditCard, Transaction } from "@/types";
-import { CreditCard as CardIcon, Calendar, CalendarClock, Trash2 } from "lucide-react";
+import { CreditCard as CardIcon, Calendar, CalendarClock, Trash2, Pencil } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
+import { useToast } from "@/contexts/ToastContext";
 
 interface CreditCardListProps {
     cards: CreditCard[];
     transactions: Transaction[];
+    onEdit?: (card: CreditCard) => void;
 }
 
-export default function CreditCardList({ cards, transactions }: CreditCardListProps) {
+export default function CreditCardList({ cards, transactions, onEdit }: CreditCardListProps) {
     const { removeCard } = useFinance();
+    const { showToast } = useToast();
 
-    const handleDelete = (id: string) => {
-        if (confirm("Tem certeza que deseja excluir este cartão?")) {
+    const handleDelete = (id: string, cardName: string) => {
+        if (confirm(`Tem certeza que deseja excluir o cartão ${cardName}?`)) {
             removeCard(id);
+            showToast('success', `Cartão ${cardName} excluído com sucesso!`);
         }
     };
 
@@ -39,14 +43,25 @@ export default function CreditCardList({ cards, transactions }: CreditCardListPr
 
                 return (
                     <div key={card.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group relative">
-                        {/* Delete Button (Visible on Hover) */}
-                        <button
-                            onClick={() => handleDelete(card.id)}
-                            className="absolute top-4 right-4 z-10 p-2 bg-white/20 hover:bg-white/30 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all"
-                            title="Excluir Cartão"
-                        >
-                            <Trash2 size={16} />
-                        </button>
+                        {/* Action Buttons (Visible on Hover) */}
+                        <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            {onEdit && (
+                                <button
+                                    onClick={() => onEdit(card)}
+                                    className="p-2 bg-white/20 hover:bg-white/30 text-white rounded-full"
+                                    title="Editar Cartão"
+                                >
+                                    <Pencil size={16} />
+                                </button>
+                            )}
+                            <button
+                                onClick={() => handleDelete(card.id, card.name)}
+                                className="p-2 bg-white/20 hover:bg-white/30 text-white rounded-full"
+                                title="Excluir Cartão"
+                            >
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
 
                         {/* Card Header */}
                         <div className={`${cardColor} p-6 text-white`}>

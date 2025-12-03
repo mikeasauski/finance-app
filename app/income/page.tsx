@@ -1,60 +1,111 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
-import TransactionList from "@/components/transactions/TransactionList";
-import TransactionFilters from "@/components/transactions/TransactionFilters";
-import TransactionForm from "@/components/forms/TransactionForm";
+import { Wallet, Plus, X, TrendingUp, Calendar } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
+import TransactionList from "@/components/transactions/TransactionList";
+import TransactionForm from "@/components/forms/TransactionForm";
 import { Transaction } from "@/types";
 
 export default function IncomePage() {
     const { transactions } = useFinance();
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
 
+    // Filter only income transactions
     const incomeTransactions = transactions.filter(t => t.type === 'income');
 
-    const filteredTransactions = incomeTransactions.filter(transaction => {
-        return transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            transaction.category.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+    // Calculate totals
+    const totalIncome = incomeTransactions.reduce((acc, t) => acc + t.amount, 0);
+    const currentMonthIncome = incomeTransactions
+        .filter(t => {
+            const tDate = new Date(t.date);
+            const now = new Date();
+            return tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear();
+        })
+        .reduce((acc, t) => acc + t.amount, 0);
+
+    const handleEdit = (transaction: Transaction) => {
+        setEditingTransaction(transaction);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setEditingTransaction(null);
+    };
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl font-bold text-gray-800">Renda</h1>
-                <p className="text-gray-500">Gerencie suas fontes de renda</p>
+            <div className="flex justify-between items-center">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-800">Renda</h1>
+                    <p className="text-gray-500">Gerencie seus recebimentos e salários</p>
+                </div>
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20"
+                >
+                    <Plus size={20} />
+                    <span>Nova Renda</span>
+                </button>
             </div>
 
-            <TransactionFilters
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                typeFilter="income"
-                onTypeFilterChange={() => { }} // No-op for income page
-            />
-
-            <TransactionList
-                transactions={filteredTransactions}
-                onEdit={(transaction) => setEditingTransaction(transaction)}
-            />
-
-            {/* Edit Transaction Modal */}
-            {editingTransaction && (
-                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm">
-                    <div className="flex min-h-full items-center justify-center p-4">
-                        <div className="relative w-full max-w-md">
-                            <button
-                                onClick={() => setEditingTransaction(null)}
-                                className="absolute -top-10 right-0 text-white/70 hover:text-white"
-                            >
-                                <X size={24} />
-                            </button>
-                            <TransactionForm
-                                initialData={editingTransaction}
-                                onClose={() => setEditingTransaction(null)}
-                            />
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex items-center gap-4">
+                        <div className="bg-green-100 p-3 rounded-xl text-green-600">
+                            <TrendingUp size={24} />
                         </div>
+                        <div>
+                            <p className="text-sm text-gray-500 font-medium">Total Recebido (Geral)</p>
+                            <h3 className="text-2xl font-bold text-gray-900">
+                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalIncome)}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex items-center gap-4">
+                        <div className="bg-blue-100 p-3 rounded-xl text-blue-600">
+                            <Calendar size={24} />
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 font-medium">Este Mês</p>
+                            <h3 className="text-2xl font-bold text-gray-900">
+                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(currentMonthIncome)}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Income List */}
+            <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">Histórico de Recebimentos</h2>
+                <TransactionList
+                    transactions={incomeTransactions}
+                    onEdit={handleEdit}
+                />
+            </div>
+
+            {/* Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl">
+                        <button
+                            onClick={handleCloseModal}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                        >
+                            <X size={24} />
+                        </button>
+                        <TransactionForm
+                            onClose={handleCloseModal}
+                            initialData={editingTransaction || undefined}
+                            defaultType="income"
+                            lockType={true}
+                        />
                     </div>
                 </div>
             )}

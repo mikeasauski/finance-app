@@ -1,72 +1,84 @@
 "use client";
 
-import React from "react";
-import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useFinance } from "@/contexts/FinanceContext";
+import { useMemo } from "react";
+import { startOfMonth, subMonths, format, endOfMonth, isWithinInterval, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-const data = [
-    { name: "01/06", saldo: 2000 },
-    { name: "05/06", saldo: 1500 },
-    { name: "10/06", saldo: 3800 },
-    { name: "15/06", saldo: 3200 },
-    { name: "20/06", saldo: 2800 },
-    { name: "25/06", saldo: 4500 },
-    { name: "30/06", saldo: 4200 },
-];
+export function BalanceChart() {
+    const { transactions } = useFinance();
 
-export default function BalanceChart() {
+    const data = useMemo(() => {
+        const today = new Date();
+        const last6Months = Array.from({ length: 6 }, (_, i) => {
+            const date = subMonths(today, 5 - i);
+            return {
+                date,
+                monthName: format(date, 'MMM', { locale: ptBR }).toUpperCase(),
+                income: 0,
+                expense: 0
+            };
+        });
+
+        transactions.forEach(transaction => {
+            const transactionDate = parseISO(transaction.date);
+
+            last6Months.forEach(month => {
+                const start = startOfMonth(month.date);
+                const end = endOfMonth(month.date);
+
+                if (isWithinInterval(transactionDate, { start, end })) {
+                    if (transaction.type === 'income') {
+                        month.income += transaction.amount;
+                    } else {
+                        month.expense += transaction.amount;
+                    }
+                }
+            });
+        });
+
+        return last6Months;
+    }, [transactions]);
+
     return (
-        <div className="h-[300px] w-full">
+        <div className="h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                    data={data}
-                    margin={{
-                        top: 10,
-                        right: 10,
-                        left: 0,
-                        bottom: 0,
-                    }}
-                >
-                    <defs>
-                        <linearGradient id="colorSaldo" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#2563eb" stopOpacity={0.2} />
-                            <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                <BarChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                     <XAxis
-                        dataKey="name"
+                        dataKey="monthName"
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#9ca3af', fontSize: 12 }}
+                        tick={{ fill: '#6B7280', fontSize: 12 }}
                         dy={10}
                     />
                     <YAxis
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#9ca3af', fontSize: 12 }}
+                        tick={{ fill: '#6B7280', fontSize: 12 }}
                         tickFormatter={(value) => `R$ ${value}`}
                     />
                     <Tooltip
+                        cursor={{ fill: '#F3F4F6' }}
                         contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                        formatter={(value: number) => [`R$ ${value}`, "Saldo"]}
+                        formatter={(value: number) => [`R$ ${value.toFixed(2)}`, '']}
                     />
-                    <Area
-                        type="monotone"
-                        dataKey="saldo"
-                        stroke="#2563eb"
-                        strokeWidth={3}
-                        fillOpacity={1}
-                        fill="url(#colorSaldo)"
+                    <Bar
+                        dataKey="income"
+                        name="Entradas"
+                        fill="#10B981"
+                        radius={[4, 4, 0, 0]}
+                        barSize={32}
                     />
-                </AreaChart>
+                    <Bar
+                        dataKey="expense"
+                        name="Saídas"
+                        fill="#EF4444"
+                        radius={[4, 4, 0, 0]}
+                        barSize={32}
+                    />
+                </BarChart>
             </ResponsiveContainer>
         </div>
     );

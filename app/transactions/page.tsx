@@ -13,13 +13,20 @@ export default function TransactionsPage() {
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [typeFilter, setTypeFilter] = useState<TransactionType | 'all'>('all');
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
+
+    // Extract unique categories
+    const availableCategories = Array.from(new Set(transactions.map(t => t.category))).sort();
 
     const filteredTransactions = transactions.filter(transaction => {
         const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             transaction.category.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesType = typeFilter === 'all' || transaction.type === typeFilter;
+        const matchesCategory = categoryFilter === '' || transaction.category === categoryFilter;
+        const matchesPaymentMethod = paymentMethodFilter === '' || transaction.paymentMethod === paymentMethodFilter;
 
-        return matchesSearch && matchesType;
+        return matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
     });
 
     return (
@@ -34,6 +41,11 @@ export default function TransactionsPage() {
                 onSearchChange={setSearchTerm}
                 typeFilter={typeFilter}
                 onTypeFilterChange={setTypeFilter}
+                categoryFilter={categoryFilter}
+                onCategoryChange={setCategoryFilter}
+                paymentMethodFilter={paymentMethodFilter}
+                onPaymentMethodChange={setPaymentMethodFilter}
+                availableCategories={availableCategories}
             />
 
             <TransactionList

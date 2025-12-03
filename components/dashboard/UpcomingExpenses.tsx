@@ -12,10 +12,12 @@ interface UpcomingExpensesProps {
 export default function UpcomingExpenses({ transactions }: UpcomingExpensesProps) {
     const today = new Date();
 
-    // Filter expenses for the current week
+    // Filter expenses for the current week that are NOT paid
     const upcomingExpenses = transactions
         .filter(t => {
             if (t.type !== 'expense') return false;
+            if (t.isPaid) return false; // Only show unpaid bills
+
             const expenseDate = parseISO(t.date);
             // Check if it's in the same week
             return isSameWeek(expenseDate, today, { locale: ptBR });

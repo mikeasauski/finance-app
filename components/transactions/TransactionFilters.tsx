@@ -8,13 +8,23 @@ interface TransactionFiltersProps {
     onSearchChange: (value: string) => void;
     typeFilter: TransactionType | 'all';
     onTypeFilterChange: (value: TransactionType | 'all') => void;
+    categoryFilter: string;
+    onCategoryChange: (value: string) => void;
+    paymentMethodFilter: string;
+    onPaymentMethodChange: (value: string) => void;
+    availableCategories: string[];
 }
 
 export default function TransactionFilters({
     searchTerm,
     onSearchChange,
     typeFilter,
-    onTypeFilterChange
+    onTypeFilterChange,
+    categoryFilter,
+    onCategoryChange,
+    paymentMethodFilter,
+    onPaymentMethodChange,
+    availableCategories
 }: TransactionFiltersProps) {
     return (
         <div className="flex flex-col md:flex-row gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -30,35 +40,80 @@ export default function TransactionFilters({
                 />
             </div>
 
-            {/* Filters */}
-            <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-                <button
-                    onClick={() => onTypeFilterChange('all')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${typeFilter === 'all'
-                            ? 'bg-gray-900 text-white'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        }`}
+            {/* Filters Row */}
+            <div className="flex flex-wrap gap-3 items-center">
+                {/* Type Filter */}
+                <div className="flex bg-gray-100 p-1 rounded-lg">
+                    <button
+                        onClick={() => onTypeFilterChange('all')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${typeFilter === 'all'
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                    >
+                        Todas
+                    </button>
+                    <button
+                        onClick={() => onTypeFilterChange('income')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${typeFilter === 'income'
+                            ? 'bg-white text-green-600 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                    >
+                        Receitas
+                    </button>
+                    <button
+                        onClick={() => onTypeFilterChange('expense')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${typeFilter === 'expense'
+                            ? 'bg-white text-red-600 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                    >
+                        Despesas
+                    </button>
+                </div>
+
+                <div className="h-6 w-px bg-gray-200 hidden md:block" />
+
+                {/* Category Filter */}
+                <select
+                    value={categoryFilter}
+                    onChange={(e) => onCategoryChange(e.target.value)}
+                    className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
-                    Todas
-                </button>
-                <button
-                    onClick={() => onTypeFilterChange('expense')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${typeFilter === 'expense'
-                            ? 'bg-red-100 text-red-700 border border-red-200'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        }`}
+                    <option value="">Todas Categorias</option>
+                    {availableCategories.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                </select>
+
+                {/* Payment Method Filter */}
+                <select
+                    value={paymentMethodFilter}
+                    onChange={(e) => onPaymentMethodChange(e.target.value)}
+                    className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
-                    Despesas
-                </button>
-                <button
-                    onClick={() => onTypeFilterChange('income')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${typeFilter === 'income'
-                            ? 'bg-green-100 text-green-700 border border-green-200'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        }`}
-                >
-                    Receitas
-                </button>
+                    <option value="">Todos Métodos</option>
+                    <option value="credit">Crédito</option>
+                    <option value="debit">Débito</option>
+                    <option value="pix">Pix</option>
+                    <option value="cash">Dinheiro</option>
+                    <option value="transfer">Transferência</option>
+                </select>
+
+                {(categoryFilter || paymentMethodFilter || typeFilter !== 'all' || searchTerm) && (
+                    <button
+                        onClick={() => {
+                            onCategoryChange('');
+                            onPaymentMethodChange('');
+                            onTypeFilterChange('all');
+                            onSearchChange('');
+                        }}
+                        className="ml-auto text-sm text-red-500 hover:text-red-700 font-medium"
+                    >
+                        Limpar Filtros
+                    </button>
+                )}
             </div>
         </div>
     );

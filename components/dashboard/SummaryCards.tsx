@@ -3,26 +3,50 @@
 import { ContextType } from "@/types";
 import { ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
+import { startOfMonth, endOfMonth, isWithinInterval, parseISO } from "date-fns";
 
 interface SummaryCardsProps {
     context: ContextType;
 }
 
 export default function SummaryCards({ context }: SummaryCardsProps) {
-    const { transactions: allTransactions } = useFinance();
+    const { transactions: allTransactions, accounts } = useFinance();
 
     // Filter transactions by context
     const transactions = allTransactions.filter(t => t.context === context);
 
-    const income = transactions
+    // Calculate Account Balances (includes initial balance + linked transactions)
+    const accountsBalance = accounts
+        .filter(a => a.context === context)
+        .reduce((acc, curr) => acc + curr.balance, 0);
+
+    // Calculate Cash Balance (Transactions NOT linked to accounts, e.g. Cash)
+    // Credit card expenses don't affect cash balance immediately.
+    const cashTransactions = transactions.filter(t => !t.accountId && t.paymentMethod === 'cash');
+
+    const cashBalance = cashTransactions.reduce((acc, curr) => {
+        return acc + (curr.type === 'income' ? curr.amount : -curr.amount);
+    }, 0);
+
+    const balance = accountsBalance + cashBalance;
+
+    // Calculate Monthly Stats
+    const now = new Date();
+    const monthStart = startOfMonth(now);
+    const monthEnd = endOfMonth(now);
+
+    const monthlyTransactions = transactions.filter(t => {
+        const date = parseISO(t.date);
+        return isWithinInterval(date, { start: monthStart, end: monthEnd });
+    });
+
+    const income = monthlyTransactions
         .filter(t => t.type === 'income')
         .reduce((acc, curr) => acc + curr.amount, 0);
 
-    const expense = transactions
+    const expense = monthlyTransactions
         .filter(t => t.type === 'expense')
         .reduce((acc, curr) => acc + curr.amount, 0);
-
-    const balance = income - expense;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -60,7 +84,7 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                     </span>
                 </div>
                 <div>
-                    <p className="text-gray-500 text-sm mb-1">Receitas</p>
+                    <p className="text-gray-500 text-sm mb-1">Receitas (Este Mês)</p>
                     <h3 className="text-2xl font-bold text-gray-800">
                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(income)}
                     </h3>
@@ -78,7 +102,7 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                     </span>
                 </div>
                 <div>
-                    <p className="text-gray-500 text-sm mb-1">Despesas</p>
+                    <p className="text-gray-500 text-sm mb-1">Despesas (Este Mês)</p>
                     <h3 className="text-2xl font-bold text-gray-800">
                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(expense)}
                     </h3>
