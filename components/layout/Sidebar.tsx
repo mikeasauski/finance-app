@@ -11,32 +11,43 @@ import {
     Menu,
     X,
     Wallet,
-    Plus
+    Plus,
+    Calendar,
+    BarChart,
+    Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TransactionForm from "@/components/forms/TransactionForm";
+import { useUser } from "@/contexts/UserContext";
 
-const navItems = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
-    { name: "Transações", href: "/transactions", icon: ArrowLeftRight },
-    { name: "Cartões", href: "/cards", icon: CreditCard },
-    { name: "Renda", href: "/income", icon: Wallet },
-    { name: "Configurações", href: "/settings", icon: Settings },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Sidebar() {
+    const { user, logout } = useUser();
+    const { t } = useLanguage();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+
+    const navItems = [
+        { name: t("dashboard"), href: "/", icon: LayoutDashboard },
+        { name: t("transactions"), href: "/transactions", icon: ArrowLeftRight },
+        { name: t("wallet"), href: "/cards", icon: CreditCard },
+        { name: t("calendar"), href: "/calendar", icon: Calendar },
+        { name: t("reports"), href: "/reports", icon: BarChart },
+        { name: t("planning"), href: "/planning", icon: Target },
+        { name: t("income"), href: "/income", icon: Wallet },
+        { name: t("settings"), href: "/settings", icon: Settings },
+    ];
 
     return (
         <>
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-md md:hidden text-gray-700"
+                className="fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md md:hidden"
             >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                <Menu size={24} />
             </button>
 
             {/* Overlay */}
@@ -47,64 +58,69 @@ export default function Sidebar() {
                 />
             )}
 
-            {/* Sidebar */}
-            <aside
-                className={cn(
-                    "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-border transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:h-screen",
-                    isOpen ? "translate-x-0" : "-translate-x-full"
-                )}
-            >
-                <div className="flex flex-col h-full">
-                    {/* Logo */}
-                    <div className="flex items-center justify-center h-16 border-b border-border">
-                        <h1 className="text-2xl font-bold text-primary">Finanças</h1>
+            <aside className={cn(
+                "fixed md:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-border transform transition-transform duration-200 ease-in-out flex flex-col",
+                isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+            )}>
+                <div className="p-6">
+                    <div className="flex items-center gap-2 mb-8">
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                            F
+                        </div>
+                        <h1 className="text-xl font-bold text-gray-900">Finance.ai</h1>
                     </div>
 
-                    {/* New Transaction Button */}
-                    <div className="p-4">
-                        <button
-                            onClick={() => setIsTransactionModalOpen(true)}
-                            className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
-                        >
-                            <Plus size={20} />
-                            <span>Nova Transação</span>
-                        </button>
-                    </div>
-
-                    {/* Navigation */}
-                    <nav className="flex-1 px-4 space-y-2">
+                    <nav className="space-y-1">
                         {navItems.map((item) => {
-                            const Icon = item.icon;
                             const isActive = pathname === item.href;
-
                             return (
                                 <Link
                                     key={item.href}
                                     href={item.href}
                                     onClick={() => setIsOpen(false)}
                                     className={cn(
-                                        "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                                        "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                                         isActive
-                                            ? "bg-blue-50 text-blue-700"
+                                            ? "bg-blue-50 text-blue-600"
                                             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                                     )}
                                 >
-                                    <Icon className="w-5 h-5 mr-3" />
+                                    <item.icon size={20} />
                                     {item.name}
                                 </Link>
                             );
                         })}
                     </nav>
+                </div>
 
-                    {/* User Profile / Footer (Optional) */}
+                <div className="mt-auto p-4 space-y-4">
+                    <button
+                        onClick={() => setIsTransactionModalOpen(true)}
+                        className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                    >
+                        <Plus size={20} />
+                        <span>{t('new_transaction')}</span>
+                    </button>
+
+                    {/* User Profile / Footer */}
                     <div className="p-4 border-t border-border">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-blue-600 font-bold">
-                                U
-                            </div>
-                            <div>
-                                <p className="text-sm font-medium text-gray-900">Usuário</p>
-                                <p className="text-xs text-gray-500">Premium</p>
+                            {user?.photo ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={user.photo} alt={user.name} className="w-10 h-10 rounded-full object-cover" />
+                            ) : (
+                                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+                                    {user?.name?.charAt(0).toUpperCase() || "U"}
+                                </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate">{user?.name || t('user')}</p>
+                                <button
+                                    onClick={logout}
+                                    className="text-xs text-red-500 hover:text-red-700 font-medium"
+                                >
+                                    {t('logout')}
+                                </button>
                             </div>
                         </div>
                     </div>

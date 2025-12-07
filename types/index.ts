@@ -2,7 +2,7 @@ export type ContextType = 'PF' | 'PJ';
 
 export type TransactionType = 'income' | 'expense';
 
-export type TransactionSubType = 'fixed' | 'installment' | 'daily';
+export type TransactionSubType = 'daily' | 'installment' | 'fixed' | 'subscription';
 
 export type PaymentMethod = 'credit' | 'debit' | 'cash' | 'pix' | 'transfer';
 
@@ -12,7 +12,20 @@ export interface CreditCard {
     limit: number;
     closingDay: number;
     dueDay: number;
-    color?: string;
+    color: string;
+    context: ContextType;
+    bankId?: string;
+    isFavorite?: boolean;
+}
+
+export interface Account {
+    id: string;
+    name: string;
+    bankId: string;
+    balance: number;
+    initialBalance: number;
+    isFavorite: boolean;
+    context: ContextType;
 }
 
 export interface Transaction {
@@ -24,10 +37,20 @@ export interface Transaction {
     subType: TransactionSubType;
     category: string;
     paymentMethod: PaymentMethod;
+    status: 'pending' | 'paid';
+    isPaid: boolean; // Deprecated, keep for backward compatibility for now
     installments?: {
         current: number;
         total: number;
     };
+    brandId?: string;
     context: ContextType;
     cardId?: string;
+    accountId?: string;
+    isPaid?: boolean;
+    recurrence?: {
+        frequency: 'monthly';
+        day: number;
+        infinite: boolean;
+    };
 }

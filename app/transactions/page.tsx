@@ -8,25 +8,35 @@ import TransactionForm from "@/components/forms/TransactionForm";
 import { useFinance } from "@/contexts/FinanceContext";
 import { Transaction, TransactionType } from "@/types";
 
+import { useLanguage } from "@/contexts/LanguageContext";
+
 export default function TransactionsPage() {
+    const { t } = useLanguage();
     const { transactions } = useFinance();
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [typeFilter, setTypeFilter] = useState<TransactionType | 'all'>('all');
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
+
+    // Extract unique categories
+    const availableCategories = Array.from(new Set(transactions.map(t => t.category))).sort();
 
     const filteredTransactions = transactions.filter(transaction => {
         const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             transaction.category.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesType = typeFilter === 'all' || transaction.type === typeFilter;
+        const matchesCategory = categoryFilter === '' || transaction.category === categoryFilter;
+        const matchesPaymentMethod = paymentMethodFilter === '' || transaction.paymentMethod === paymentMethodFilter;
 
-        return matchesSearch && matchesType;
+        return matchesSearch && matchesType && matchesCategory && matchesPaymentMethod;
     });
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-800">Transações</h1>
-                <p className="text-gray-500">Histórico completo de movimentações</p>
+                <h1 className="text-2xl font-bold text-gray-800">{t('transactions')}</h1>
+                <p className="text-gray-500">{t('transactions_subtitle')}</p>
             </div>
 
             <TransactionFilters
@@ -34,6 +44,11 @@ export default function TransactionsPage() {
                 onSearchChange={setSearchTerm}
                 typeFilter={typeFilter}
                 onTypeFilterChange={setTypeFilter}
+                categoryFilter={categoryFilter}
+                onCategoryChange={setCategoryFilter}
+                paymentMethodFilter={paymentMethodFilter}
+                onPaymentMethodChange={setPaymentMethodFilter}
+                availableCategories={availableCategories}
             />
 
             <TransactionList

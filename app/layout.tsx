@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
 import { cn } from "@/lib/utils";
 import { FinanceProvider } from "@/contexts/FinanceContext";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,6 +13,13 @@ export const metadata: Metadata = {
     description: "Gerenciador financeiro pessoal",
 };
 
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { UserProvider } from "@/contexts/UserContext";
+import AuthGuard from "@/components/layout/AuthGuard";
+import LayoutContent from "@/components/layout/LayoutContent";
+import ErrorBoundary from "@/components/ErrorBoundary";
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -19,13 +27,24 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="pt-BR">
-            <body className={cn(inter.className, "bg-gray-50 flex min-h-screen")}>
-                <FinanceProvider>
-                    <Sidebar />
-                    <main className="flex-1 p-8 overflow-y-auto">
-                        {children}
-                    </main>
-                </FinanceProvider>
+            <body className={`${inter.className} antialiased bg-gray-50 transition-colors duration-300`}>
+                <ErrorBoundary>
+                    <ToastProvider>
+                        <FinanceProvider>
+                            <ThemeProvider>
+                                <LanguageProvider>
+                                    <UserProvider>
+                                        <AuthGuard>
+                                            <LayoutContent>
+                                                {children}
+                                            </LayoutContent>
+                                        </AuthGuard>
+                                    </UserProvider>
+                                </LanguageProvider>
+                            </ThemeProvider>
+                        </FinanceProvider>
+                    </ToastProvider>
+                </ErrorBoundary>
             </body>
         </html>
     );
