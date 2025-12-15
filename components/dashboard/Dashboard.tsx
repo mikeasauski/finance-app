@@ -66,7 +66,7 @@ export default function Dashboard() {
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800">{t('overview')}</h2>
+                    <h2 className="text-2xl font-bold text-gray-800">{t('dashboard')}</h2>
                     <p className="text-gray-500">{t('dashboard_subtitle')}</p>
                 </div>
 

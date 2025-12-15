@@ -73,6 +73,12 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             return;
         }
 
+        // Enforce account selection for non-credit transactions
+        if (paymentMethod !== 'credit' && !selectedAccountId) {
+            alert(t('select_account_required') || "Por favor, selecione uma conta.");
+            return;
+        }
+
         const transactionData: Transaction = {
             id: initialData ? initialData.id : crypto.randomUUID(),
             type,
@@ -433,17 +439,17 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                 </label>
             </div>
 
-            {/* Account Selection (for non-credit, non-cash) */}
-            {paymentMethod !== 'credit' && paymentMethod !== 'cash' && (
+            {/* Account Selection (for non-credit) */}
+            {paymentMethod !== 'credit' && (
                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                    <label className="block text-xs font-medium text-gray-500 mb-1">{t('account')} {isPaid ? "" : `(${t('optional')})`}</label>
+                    <label className="block text-xs font-medium text-gray-500 mb-1">{t('account')} <span className="text-red-500">*</span></label>
                     <div className="relative">
                         <Landmark className="absolute left-3 top-2.5 text-gray-400" size={18} />
                         <select
                             value={selectedAccountId}
                             onChange={(e) => setSelectedAccountId(e.target.value)}
                             className="w-full pl-10 p-2 bg-white border border-gray-200 rounded-lg appearance-none"
-                            required={isPaid}
+                            required
                         >
                             <option value="">{t('select_account')}</option>
                             {accounts?.map(acc => (

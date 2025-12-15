@@ -97,11 +97,11 @@ export default function TransactionFilters({
                     className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
                     <option value="">{t('all_methods')}</option>
-                    <option value="credit">Crédito</option>
-                    <option value="debit">Débito</option>
-                    <option value="pix">Pix</option>
-                    <option value="cash">Dinheiro</option>
-                    <option value="transfer">Transferência</option>
+                    <option value="credit">{t('credit')}</option>
+                    <option value="debit">{t('debit')}</option>
+                    <option value="pix">{t('pix')}</option>
+                    <option value="cash">{t('cash')}</option>
+                    <option value="transfer">{t('transfer')}</option>
                 </select>
 
                 {(categoryFilter || paymentMethodFilter || typeFilter !== 'all' || searchTerm) && (

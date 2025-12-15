@@ -6,9 +6,11 @@ import { useFinance } from "@/contexts/FinanceContext";
 import TransactionList from "@/components/transactions/TransactionList";
 import TransactionForm from "@/components/forms/TransactionForm";
 import { Transaction } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function IncomePage() {
     const { transactions } = useFinance();
+    const { t, locale } = useLanguage();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
@@ -39,15 +41,15 @@ export default function IncomePage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">Renda</h1>
-                    <p className="text-gray-500">Gerencie seus recebimentos e salários</p>
+                    <h1 className="text-2xl font-bold text-gray-800">{t('income_title')}</h1>
+                    <p className="text-gray-500">{t('income_subtitle')}</p>
                 </div>
                 <button
                     onClick={() => setIsModalOpen(true)}
                     className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20"
                 >
                     <Plus size={20} />
-                    <span>Nova Renda</span>
+                    <span>{t('new_income_button')}</span>
                 </button>
             </div>
 
@@ -59,9 +61,9 @@ export default function IncomePage() {
                             <TrendingUp size={24} />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500 font-medium">Total Recebido (Geral)</p>
+                            <p className="text-sm text-gray-500 font-medium">{t('total_received_general')}</p>
                             <h3 className="text-2xl font-bold text-gray-900">
-                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalIncome)}
+                                {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(totalIncome)}
                             </h3>
                         </div>
                     </div>
@@ -72,9 +74,9 @@ export default function IncomePage() {
                             <Calendar size={24} />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500 font-medium">Este Mês</p>
+                            <p className="text-sm text-gray-500 font-medium">{t('this_month')}</p>
                             <h3 className="text-2xl font-bold text-gray-900">
-                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(currentMonthIncome)}
+                                {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(currentMonthIncome)}
                             </h3>
                         </div>
                     </div>
@@ -83,7 +85,7 @@ export default function IncomePage() {
 
             {/* Income List */}
             <div>
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Histórico de Recebimentos</h2>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('income_history')}</h2>
                 <TransactionList
                     transactions={incomeTransactions}
                     onEdit={handleEdit}

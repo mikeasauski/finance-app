@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, getDay, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, getDay, parseISO, startOfWeek, endOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight, ArrowDownLeft, ArrowUpRight, Calendar as CalendarIcon, CreditCard as CreditCardIcon } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
 import { cn } from "@/lib/utils";
 import { Transaction, CreditCard } from "@/types";
 import { getBrandById } from "@/lib/brands";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CalendarPage() {
     const { transactions, cards } = useFinance();
+    const { t, locale } = useLanguage();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
@@ -86,12 +87,18 @@ export default function CalendarPage() {
         return { income, expense, balance: income - expense };
     };
 
+    // Generate week days dynamically based on locale
+    const weekDays = eachDayOfInterval({
+        start: startOfWeek(new Date(), { weekStartsOn: 0 }),
+        end: endOfWeek(new Date(), { weekStartsOn: 0 })
+    }).map(day => format(day, 'EEE', { locale }));
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">Calendário</h1>
-                    <p className="text-gray-500">Visualize seus vencimentos e receitas</p>
+                    <h1 className="text-2xl font-bold text-gray-800">{t('calendar_title')}</h1>
+                    <p className="text-gray-500">{t('calendar_subtitle')}</p>
                 </div>
 
                 <div className="flex items-center gap-4 bg-white p-1 rounded-xl border border-gray-200 shadow-sm">
@@ -99,7 +106,7 @@ export default function CalendarPage() {
                         <ChevronLeft size={20} />
                     </button>
                     <span className="font-semibold text-gray-800 min-w-[140px] text-center capitalize">
-                        {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
+                        {format(currentDate, 'MMMM yyyy', { locale })}
                     </span>
                     <button onClick={nextMonth} className="p-2 hover:bg-gray-100 rounded-lg text-gray-600">
                         <ChevronRight size={20} />
@@ -111,7 +118,7 @@ export default function CalendarPage() {
                 {/* Calendar Grid */}
                 <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <div className="grid grid-cols-7 gap-2 mb-4">
-                        {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                        {weekDays.map(day => (
                             <div key={day} className="text-center text-xs font-semibold text-gray-400 uppercase">
                                 {day}
                             </div>
@@ -158,7 +165,7 @@ export default function CalendarPage() {
                                         {hasInvoices && (
                                             <div className="w-full flex justify-center mt-0.5">
                                                 <div className="bg-purple-100 text-purple-700 text-[9px] px-1 rounded-sm w-full truncate text-center font-medium">
-                                                    Fatura
+                                                    {t('invoice')}
                                                 </div>
                                             </div>
                                         )}
@@ -173,14 +180,14 @@ export default function CalendarPage() {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-fit">
                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                         <CalendarIcon size={20} className="text-blue-600" />
-                        {selectedDate ? format(selectedDate, "d 'de' MMMM", { locale: ptBR }) : 'Selecione uma data'}
+                        {selectedDate ? format(selectedDate, "d 'de' MMMM", { locale }) : t('select_date')}
                     </h3>
 
                     <div className="space-y-6">
                         {/* Invoices Section */}
                         {selectedDateInvoices.length > 0 && (
                             <div className="space-y-3">
-                                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Faturas do Dia</h4>
+                                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">{t('todays_invoices')}</h4>
                                 {selectedDateInvoices.map(({ card, amount }) => (
                                     <div key={card.id} className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-100">
                                         <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm" style={{ background: card.color }}>
@@ -188,10 +195,10 @@ export default function CalendarPage() {
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="font-medium text-gray-900 truncate">{card.name}</p>
-                                            <p className="text-xs text-purple-600 font-medium">Vencimento Hoje</p>
+                                            <p className="text-xs text-purple-600 font-medium">{t('due_today')}</p>
                                         </div>
                                         <div className="font-bold text-gray-900">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)}
+                                            {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(amount)}
                                         </div>
                                     </div>
                                 ))}
@@ -201,7 +208,7 @@ export default function CalendarPage() {
                         {/* Transactions Section */}
                         {selectedDateTransactions.length > 0 ? (
                             <div className="space-y-3">
-                                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Lançamentos</h4>
+                                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">{t('entries')}</h4>
                                 {selectedDateTransactions.map(transaction => {
                                     const brand = transaction.brandId ? getBrandById(transaction.brandId) : null;
 
@@ -227,7 +234,7 @@ export default function CalendarPage() {
                                                 transaction.type === 'income' ? "text-green-600" : "text-gray-900"
                                             )}>
                                                 {transaction.type === 'expense' && '- '}
-                                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(transaction.amount)}
+                                                {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(transaction.amount)}
                                             </div>
                                         </div>
                                     );
@@ -235,17 +242,17 @@ export default function CalendarPage() {
 
                                 <div className="pt-4 border-t border-gray-100 mt-4">
                                     <div className="flex justify-between text-sm mb-2">
-                                        <span className="text-gray-500">Entradas</span>
+                                        <span className="text-gray-500">{t('inflows')}</span>
                                         <span className="text-green-600 font-medium">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+                                            {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(
                                                 selectedDateTransactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + curr.amount, 0)
                                             )}
                                         </span>
                                     </div>
                                     <div className="flex justify-between text-sm mb-2">
-                                        <span className="text-gray-500">Saídas</span>
+                                        <span className="text-gray-500">{t('outflows')}</span>
                                         <span className="text-red-600 font-medium">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+                                            {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(
                                                 selectedDateTransactions.filter(t => t.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0)
                                             )}
                                         </span>
@@ -255,7 +262,7 @@ export default function CalendarPage() {
                         ) : (
                             selectedDateInvoices.length === 0 && (
                                 <div className="text-center py-12 text-gray-400">
-                                    <p>Nenhum lançamento ou fatura para este dia.</p>
+                                    <p>{t('no_entries_day')}</p>
                                 </div>
                             )
                         )}

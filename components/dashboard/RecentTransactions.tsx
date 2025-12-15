@@ -2,7 +2,7 @@
 
 import { Transaction } from "@/types";
 import { ArrowDownLeft, ArrowUpRight, CreditCard } from "lucide-react";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface RecentTransactionsProps {
@@ -29,7 +29,7 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
     const recent = Object.values(groupedTransactions)
         .map(group => {
             // Sort group by date descending
-            const sortedGroup = group.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            const sortedGroup = group.sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime());
 
             // If it's a recurrence series (installments or subscription)
             // We want to show:
@@ -49,7 +49,7 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
 
             const earliestPending = group
                 .filter(t => !t.isPaid && t.status !== 'paid')
-                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+                .sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime())[0];
 
             const latestPaid = sortedGroup.find(t => t.isPaid || t.status === 'paid');
 
@@ -58,7 +58,7 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
 
             return displayTransaction;
         })
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort the leaders by date
+        .sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime()) // Sort the leaders by date
         .slice(0, 5);
 
     return (
@@ -86,7 +86,7 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
                                     <span>{transaction.category}</span>
                                     <span>•</span>
-                                    <span>{format(new Date(transaction.date), "d 'de' MMM", { locale })}</span>
+                                    <span>{format(parseISO(transaction.date), "d 'de' MMM", { locale })}</span>
                                     {transaction.status === 'pending' && (
                                         <span className="text-orange-500 bg-orange-50 px-1.5 rounded">{t('pending')}</span>
                                     )}

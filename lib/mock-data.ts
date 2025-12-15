@@ -16,7 +16,9 @@ export const mockTransactions: Transaction[] = [
         category: "Alimentação",
         paymentMethod: "credit",
         context: "PF",
-        cardId: "1"
+        cardId: "1",
+        status: "pending",
+        isPaid: false
     },
     {
         id: "2",
@@ -27,7 +29,9 @@ export const mockTransactions: Transaction[] = [
         subType: "fixed",
         category: "Salário",
         paymentMethod: "transfer",
-        context: "PF"
+        context: "PF",
+        status: "paid",
+        isPaid: true
     },
     {
         id: "3",
@@ -39,7 +43,9 @@ export const mockTransactions: Transaction[] = [
         category: "Lazer",
         paymentMethod: "credit",
         context: "PF",
-        cardId: "1"
+        cardId: "1",
+        status: "pending",
+        isPaid: false
     },
     {
         id: "4",
@@ -55,7 +61,9 @@ export const mockTransactions: Transaction[] = [
             total: 10
         },
         context: "PJ",
-        cardId: "2"
+        cardId: "2",
+        status: "pending",
+        isPaid: false
     },
     {
         id: "5",
@@ -66,7 +74,9 @@ export const mockTransactions: Transaction[] = [
         subType: "daily",
         category: "Alimentação",
         paymentMethod: "debit",
-        context: "PF"
+        context: "PF",
+        status: "paid",
+        isPaid: true
     },
     {
         id: "6",
@@ -77,7 +87,10 @@ export const mockTransactions: Transaction[] = [
         subType: "daily",
         category: "Serviços",
         paymentMethod: "pix",
-        context: "PJ"
+        context: "PJ",
+        status: "paid",
+        isPaid: true,
+        goalId: "2" // Linked to 'Carro Novo' goal
     },
     {
         id: "7",
@@ -89,7 +102,9 @@ export const mockTransactions: Transaction[] = [
         category: "Transporte",
         paymentMethod: "credit",
         context: "PF",
-        cardId: "1"
+        cardId: "1",
+        status: "pending",
+        isPaid: false
     },
     {
         id: "8",
@@ -101,6 +116,29 @@ export const mockTransactions: Transaction[] = [
         category: "Saúde",
         paymentMethod: "credit",
         context: "PF",
-        cardId: "1"
+        cardId: "1",
+        status: "pending",
+        isPaid: false
+    }
+];
+
+export const mockGoals: any[] = [
+    {
+        id: '1',
+        name: 'Viagem',
+        targetAmount: 6000,
+        currentAmount: 1200,
+        icon: 'plane',
+        color: 'orange',
+        deadline: '2024-12-31'
+    },
+    {
+        id: '2',
+        name: 'Carro Novo',
+        targetAmount: 25000,
+        currentAmount: 3400,
+        icon: 'car',
+        color: 'blue',
+        deadline: '2025-06-30'
     }
 ];

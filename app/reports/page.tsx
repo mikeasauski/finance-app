@@ -2,9 +2,12 @@
 
 import { useFinance } from "@/contexts/FinanceContext";
 import { PieChart, BarChart, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { format } from "date-fns";
 
 export default function ReportsPage() {
     const { transactions } = useFinance();
+    const { t, locale } = useLanguage();
 
     // 1. Calculate Spending by Category
     const expenses = transactions.filter(t => t.type === 'expense');
@@ -54,8 +57,8 @@ export default function ReportsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-800">Relatórios</h1>
-                <p className="text-gray-500">Análise detalhada das suas finanças</p>
+                <h1 className="text-2xl font-bold text-gray-800">{t('reports_title')}</h1>
+                <p className="text-gray-500">{t('reports_subtitle')}</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -63,7 +66,7 @@ export default function ReportsPage() {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <h2 className="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
                         <PieChart size={20} className="text-blue-600" />
-                        Gastos por Categoria
+                        {t('spending_by_category')}
                     </h2>
 
                     <div className="flex flex-col md:flex-row items-center gap-8">
@@ -78,9 +81,9 @@ export default function ReportsPage() {
                             }}
                         >
                             <div className="absolute inset-0 m-8 bg-white rounded-full flex items-center justify-center flex-col shadow-inner">
-                                <span className="text-xs text-gray-500">Total</span>
+                                <span className="text-xs text-gray-500">{t('total')}</span>
                                 <span className="font-bold text-gray-900">
-                                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(totalExpense)}
+                                    {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD', maximumFractionDigits: 0 }).format(totalExpense)}
                                 </span>
                             </div>
                         </div>
@@ -95,7 +98,7 @@ export default function ReportsPage() {
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <span className="font-medium text-gray-900">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.amount)}
+                                            {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(item.amount)}
                                         </span>
                                         <span className="text-xs text-gray-500 w-8 text-right">{item.percentage.toFixed(0)}%</span>
                                     </div>
@@ -109,7 +112,7 @@ export default function ReportsPage() {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <h2 className="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
                         <BarChart size={20} className="text-purple-600" />
-                        Receita vs Despesa (Últimos 6 meses)
+                        {t('income_vs_expense')}
                     </h2>
 
                     <div className="h-64 flex items-end justify-between gap-4 pt-8">
@@ -117,15 +120,17 @@ export default function ReportsPage() {
                             const incomeHeight = (data.income / maxChartValue) * 100;
                             const expenseHeight = (data.expense / maxChartValue) * 100;
                             const [year, monthNum] = month.split('-');
-                            const monthName = new Date(Number(year), Number(monthNum) - 1).toLocaleDateString('pt-BR', { month: 'short' });
+                            // Use date-fns format with locale for month name
+                            const dateObj = new Date(Number(year), Number(monthNum) - 1);
+                            const monthName = format(dateObj, 'MMM', { locale });
 
                             return (
                                 <div key={month} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
                                     <div className="w-full flex justify-center gap-1 h-full items-end relative">
                                         {/* Tooltip */}
                                         <div className="absolute bottom-full mb-2 bg-gray-800 text-white text-xs p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 whitespace-nowrap">
-                                            <div className="text-green-400">Receita: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.income)}</div>
-                                            <div className="text-red-400">Despesa: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.expense)}</div>
+                                            <div className="text-green-400">{t('revenue')}: {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(data.income)}</div>
+                                            <div className="text-red-400">{t('expense')}: {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(data.expense)}</div>
                                         </div>
 
                                         {/* Income Bar */}
@@ -146,7 +151,7 @@ export default function ReportsPage() {
 
                         {chartData.length === 0 && (
                             <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                Sem dados suficientes
+                                {t('not_enough_data')}
                             </div>
                         )}
                     </div>

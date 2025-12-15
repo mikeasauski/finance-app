@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Transaction } from "@/types";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ArrowDownLeft, ArrowUpRight, Calendar, CreditCard, MoreHorizontal, Trash2, Edit2, ChevronDown, ChevronRight } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
 import { getBrandById } from "@/lib/brands";
@@ -47,8 +47,8 @@ export default function TransactionList({ transactions, onEdit }: TransactionLis
 
     // Sort groups by date of the most relevant item
     const sortedGroups = Object.entries(groupedTransactions).sort(([, groupA], [, groupB]) => {
-        const dateA = new Date(groupA[0].date).getTime();
-        const dateB = new Date(groupB[0].date).getTime();
+        const dateA = parseISO(groupA[0].date).getTime();
+        const dateB = parseISO(groupB[0].date).getTime();
         return dateB - dateA;
     });
 
@@ -87,10 +87,10 @@ export default function TransactionList({ transactions, onEdit }: TransactionLis
 
                             // Determine display transaction for the group row
                             // Logic: Earliest pending, or latest paid
-                            const sortedGroup = [...group].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                            const sortedGroup = [...group].sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime());
                             const earliestPending = group
                                 .filter(t => !t.isPaid && t.status !== 'paid')
-                                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+                                .sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime())[0];
                             const latestPaid = sortedGroup.find(t => t.isPaid || t.status === 'paid');
                             const displayTransaction = earliestPending || latestPaid || sortedGroup[0];
 
@@ -151,16 +151,16 @@ export default function TransactionList({ transactions, onEdit }: TransactionLis
                                             </span>
                                         </td>
                                         <td className="py-4 px-6 text-sm text-gray-500">
-                                            {format(new Date(displayTransaction.date), "d 'de' MMM, yyyy", { locale })}
+                                            {format(parseISO(displayTransaction.date), "d 'de' MMM, yyyy", { locale })}
                                         </td>
                                         <td className="py-4 px-6 text-sm text-gray-500">
                                             <div className="flex items-center gap-2">
                                                 {displayTransaction.paymentMethod === 'credit' && <CreditCard size={14} />}
                                                 <span className="capitalize">
-                                                    {displayTransaction.paymentMethod === 'credit' ? 'Crédito' :
-                                                        displayTransaction.paymentMethod === 'debit' ? 'Débito' :
-                                                            displayTransaction.paymentMethod === 'pix' ? 'Pix' :
-                                                                displayTransaction.paymentMethod === 'cash' ? 'Dinheiro' : 'Transferência'}
+                                                    {displayTransaction.paymentMethod === 'credit' ? t('credit') :
+                                                        displayTransaction.paymentMethod === 'debit' ? t('debit') :
+                                                            displayTransaction.paymentMethod === 'pix' ? t('pix') :
+                                                                displayTransaction.paymentMethod === 'cash' ? t('cash') : t('transfer')}
                                                 </span>
                                             </div>
                                         </td>
@@ -202,7 +202,7 @@ export default function TransactionList({ transactions, onEdit }: TransactionLis
                                                             <p className="text-sm text-gray-700">{transactionItem.description}</p>
                                                             {transactionItem.installments && (
                                                                 <span className="text-xs text-gray-400">
-                                                                    Parcela {transactionItem.installments.current}/{transactionItem.installments.total}
+                                                                    {t('installment_prefix')} {transactionItem.installments.current}/{transactionItem.installments.total}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -212,7 +212,7 @@ export default function TransactionList({ transactions, onEdit }: TransactionLis
                                                     {/* Category repeated or empty? Empty looks cleaner */}
                                                 </td>
                                                 <td className="py-3 px-6 text-sm text-gray-500">
-                                                    {format(new Date(transactionItem.date), "d 'de' MMM, yyyy", { locale })}
+                                                    {format(parseISO(transactionItem.date), "d 'de' MMM, yyyy", { locale })}
                                                     {transactionItem.status === 'pending' && (
                                                         <span className="ml-2 text-[10px] text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded">{t('pending')}</span>
                                                     )}

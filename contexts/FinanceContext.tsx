@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Transaction, CreditCard, Account } from '@/types';
-import { mockTransactions, mockCards } from '@/lib/mock-data';
+import { Transaction, CreditCard, Account, Goal } from '@/types';
+import { mockTransactions, mockCards, mockGoals } from '@/lib/mock-data';
 import { BANKS } from '@/lib/banks';
 
 interface FinanceContextType {
@@ -18,6 +18,10 @@ interface FinanceContextType {
     addAccount: (account: Account) => void;
     updateAccount: (account: Account) => void;
     removeAccount: (id: string) => void;
+    goals: Goal[];
+    addGoal: (goal: Goal) => void;
+    updateGoal: (goal: Goal) => void;
+    removeGoal: (id: string) => void;
 }
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
@@ -25,6 +29,7 @@ const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 // Define initial data from mock-data to be used if localStorage is empty
 const initialTransactions = mockTransactions;
 const initialCards = mockCards;
+const initialGoals = mockGoals;
 
 const COLOR_MAP: Record<string, string> = {
     'purple': '#9333ea',
@@ -39,12 +44,14 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [cards, setCards] = useState<CreditCard[]>([]);
     const [accounts, setAccounts] = useState<Account[]>([]);
+    const [goals, setGoals] = useState<Goal[]>([]);
 
     // Load from LocalStorage on mount
     useEffect(() => {
         const storedTransactions = localStorage.getItem('finance_transactions');
         const storedCards = localStorage.getItem('finance_cards');
         const storedAccounts = localStorage.getItem('finance_accounts');
+        const storedGoals = localStorage.getItem('finance_goals');
 
         if (storedTransactions) {
             try {
@@ -102,6 +109,16 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
             } catch (e) {
                 console.error("Failed to parse accounts from localStorage", e);
             }
+        }
+
+        if (storedGoals) {
+            try {
+                setGoals(JSON.parse(storedGoals));
+            } catch (e) {
+                console.error("Failed to parse goals from localStorage", e);
+            }
+        } else {
+            setGoals(initialGoals);
         }
     }, []);
 
@@ -238,6 +255,10 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('finance_accounts', JSON.stringify(accounts));
     }, [accounts]);
 
+    useEffect(() => {
+        localStorage.setItem('finance_goals', JSON.stringify(goals));
+    }, [goals]);
+
     const checkTransactionLimit = (transaction: Transaction, oldTransactionId: string | undefined = undefined) => {
         // 1. Check Account Balance for Debit/Transfer/Pix
         if (transaction.paymentMethod !== 'credit' && transaction.accountId) {
@@ -298,6 +319,16 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
                 }
             }
         }
+    };
+
+    const updateAccountBalance = (accountId: string, amount: number, type: 'income' | 'expense') => {
+        setAccounts(prev => prev.map(acc => {
+            if (acc.id === accountId) {
+                const balanceChange = type === 'income' ? amount : -amount;
+                return { ...acc, balance: acc.balance + balanceChange };
+            }
+            return acc;
+        }));
     };
 
     const addTransaction = (transaction: Transaction) => {
@@ -392,12 +423,16 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
 
         // Update account balance if transaction is paid via account
         if (transaction.accountId && transaction.isPaid) {
-            setAccounts(prev => prev.map(acc => {
-                if (acc.id === transaction.accountId) {
-                    const amount = transaction.type === 'income' ? transaction.amount : -transaction.amount;
-                    return { ...acc, balance: acc.balance + amount };
+            updateAccountBalance(transaction.accountId, transaction.amount, transaction.type);
+        }
+
+        // Update Goal Amount if linked
+        if (transaction.goalId) {
+            setGoals(prev => prev.map(goal => {
+                if (goal.id === transaction.goalId) {
+                    return { ...goal, currentAmount: goal.currentAmount + transaction.amount };
                 }
-                return acc;
+                return goal;
             }));
         }
     };
@@ -415,25 +450,34 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         if (oldTransaction) {
             // Revert old transaction effect if it was paid via account
             if (oldTransaction.accountId && oldTransaction.isPaid) {
-                setAccounts(prev => prev.map(acc => {
-                    if (acc.id === oldTransaction.accountId) {
-                        const amount = oldTransaction.type === 'income' ? -oldTransaction.amount : oldTransaction.amount;
-                        return { ...acc, balance: acc.balance + amount };
-                    }
-                    return acc;
-                }));
+                const revertType = oldTransaction.type === 'income' ? 'expense' : 'income';
+                updateAccountBalance(oldTransaction.accountId, oldTransaction.amount, revertType);
             }
 
-            // Apply new transaction effect if it is paid via account
-            if (updatedTransaction.accountId && updatedTransaction.isPaid) {
-                setAccounts(prev => prev.map(acc => {
-                    if (acc.id === updatedTransaction.accountId) {
-                        const amount = updatedTransaction.type === 'income' ? updatedTransaction.amount : -updatedTransaction.amount;
-                        return { ...acc, balance: acc.balance + amount };
+            // Revert old goal amount if linked
+            if (oldTransaction.goalId) {
+                setGoals(prev => prev.map(goal => {
+                    if (goal.id === oldTransaction.goalId) {
+                        return { ...goal, currentAmount: goal.currentAmount - oldTransaction.amount };
                     }
-                    return acc;
+                    return goal;
                 }));
             }
+        }
+
+        // Apply new transaction effect if it is paid via account
+        if (updatedTransaction.accountId && updatedTransaction.isPaid) {
+            updateAccountBalance(updatedTransaction.accountId, updatedTransaction.amount, updatedTransaction.type);
+        }
+
+        // Apply new goal amount if linked
+        if (updatedTransaction.goalId) {
+            setGoals(prev => prev.map(goal => {
+                if (goal.id === updatedTransaction.goalId) {
+                    return { ...goal, currentAmount: goal.currentAmount + updatedTransaction.amount };
+                }
+                return goal;
+            }));
         }
 
         setTransactions((prev) => prev.map((t) =>
@@ -444,19 +488,28 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     const removeTransaction = (id: string) => {
         const transaction = transactions.find(t => t.id === id);
 
-        if (transaction && transaction.accountId && transaction.isPaid) {
-            setAccounts(prev => prev.map(acc => {
-                if (acc.id === transaction.accountId) {
-                    // Reverse operation: if income, subtract; if expense, add back
-                    const amount = transaction.type === 'income' ? -transaction.amount : transaction.amount;
-                    return { ...acc, balance: acc.balance + amount };
-                }
-                return acc;
-            }));
+        if (transaction) {
+            // Revert Account Balance if paid
+            if (transaction.accountId && transaction.isPaid) {
+                const revertType = transaction.type === 'income' ? 'expense' : 'income';
+                updateAccountBalance(transaction.accountId, transaction.amount, revertType);
+            }
+
+            // Revert Goal Amount if linked
+            if (transaction.goalId) {
+                setGoals(prev => prev.map(goal => {
+                    if (goal.id === transaction.goalId) {
+                        return { ...goal, currentAmount: goal.currentAmount - transaction.amount };
+                    }
+                    return goal;
+                }));
+            }
         }
 
         setTransactions((prev) => prev.filter((t) => t.id !== id));
     };
+
+
 
     const addCard = (card: CreditCard) => {
         setCards((prev) => [...prev, card]);
@@ -486,6 +539,20 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         setAccounts((prev) => prev.filter((a) => a.id !== id));
     };
 
+    const addGoal = (goal: Goal) => {
+        setGoals((prev) => [...prev, goal]);
+    };
+
+    const updateGoal = (updatedGoal: Goal) => {
+        setGoals((prev) => prev.map((g) =>
+            g.id === updatedGoal.id ? updatedGoal : g
+        ));
+    };
+
+    const removeGoal = (id: string) => {
+        setGoals((prev) => prev.filter((g) => g.id !== id));
+    };
+
     // Expose for debugging
     useEffect(() => {
         (window as any).finance = {
@@ -510,6 +577,10 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
                 addAccount,
                 updateAccount,
                 removeAccount,
+                goals,
+                addGoal,
+                updateGoal,
+                removeGoal,
             }}
         >
             {children}

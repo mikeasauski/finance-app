@@ -146,8 +146,8 @@ export default function CardsPage() {
                             </h2>
                             <CreditCardList
                                 cards={cards.filter(c => c.context === 'PJ')}
-                                transactions={transactions}
                                 onEdit={handleEditCard}
+                                onDelete={(id) => { /* Handle delete if needed */ }}
                             />
                         </section>
                     </>

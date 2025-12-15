@@ -18,6 +18,16 @@ export interface CreditCard {
     isFavorite?: boolean;
 }
 
+export interface Goal {
+    id: string;
+    name: string;
+    targetAmount: number;
+    currentAmount: number;
+    icon: 'plane' | 'car' | 'home' | 'star' | 'shield' | 'target';
+    color: string;
+    deadline?: string;
+}
+
 export interface Account {
     id: string;
     name: string;
@@ -47,7 +57,8 @@ export interface Transaction {
     context: ContextType;
     cardId?: string;
     accountId?: string;
-    isPaid?: boolean;
+    goalId?: string;
+
     recurrence?: {
         frequency: 'monthly';
         day: number;
