@@ -3,6 +3,9 @@
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 
+import MobileNav from "@/components/layout/MobileNav";
+import MobileHeader from "@/components/layout/MobileHeader";
+
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isLoginPage = pathname === "/login";
@@ -12,11 +15,15 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
     }
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen bg-gray-50">
             <Sidebar />
-            <main className="flex-1 p-8 ml-0">
+            <MobileHeader />
+
+            <main className="flex-1 p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8 w-full max-w-[100vw] overflow-x-hidden">
                 {children}
             </main>
+
+            <MobileNav />
         </div>
     );
 }

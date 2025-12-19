@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Transaction, CreditCard, Account, Goal } from '@/types';
-import { mockTransactions, mockCards, mockGoals } from '@/lib/mock-data';
+import { Transaction, CreditCard, Account, Goal, ContextType } from '@/types';
+import { mockTransactions, mockCards, mockGoals, mockAccounts } from '@/lib/mock-data';
 import { BANKS } from '@/lib/banks';
 
 interface FinanceContextType {
@@ -22,6 +22,8 @@ interface FinanceContextType {
     addGoal: (goal: Goal) => void;
     updateGoal: (goal: Goal) => void;
     removeGoal: (id: string) => void;
+    appContext: ContextType;
+    setAppContext: (context: ContextType) => void;
 }
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 const initialTransactions = mockTransactions;
 const initialCards = mockCards;
 const initialGoals = mockGoals;
+const initialAccounts = mockAccounts;
 
 const COLOR_MAP: Record<string, string> = {
     'purple': '#9333ea',
@@ -45,6 +48,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     const [cards, setCards] = useState<CreditCard[]>([]);
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [goals, setGoals] = useState<Goal[]>([]);
+    const [appContext, setAppContext] = useState<ContextType>('PF');
 
     // Load from LocalStorage on mount
     useEffect(() => {
@@ -105,10 +109,19 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
 
         if (storedAccounts) {
             try {
-                setAccounts(JSON.parse(storedAccounts));
+                const parsedAccounts = JSON.parse(storedAccounts);
+                if (parsedAccounts.length > 0) {
+                    setAccounts(parsedAccounts);
+                } else {
+                    // If stored accounts is empty array, use initial mock data
+                    setAccounts(initialAccounts);
+                }
             } catch (e) {
                 console.error("Failed to parse accounts from localStorage", e);
+                setAccounts(initialAccounts);
             }
+        } else {
+            setAccounts(initialAccounts);
         }
 
         if (storedGoals) {
@@ -581,6 +594,8 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
                 addGoal,
                 updateGoal,
                 removeGoal,
+                appContext,
+                setAppContext,
             }}
         >
             {children}

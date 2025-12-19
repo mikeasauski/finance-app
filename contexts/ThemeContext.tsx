@@ -1,8 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useFinance } from "./FinanceContext";
 
-type Theme = 'light' | 'dark' | 'entrepreneur';
+type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
     theme: Theme;
@@ -13,6 +14,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [theme, setTheme] = useState<Theme>('light');
+    const { appContext } = useFinance();
+
+    // Sync Theme with App Context (Personal/Business)
+    useEffect(() => {
+        const root = document.documentElement;
+        root.setAttribute('data-context', appContext);
+    }, [appContext]);
 
     useEffect(() => {
         const storedTheme = localStorage.getItem("finance_theme") as Theme;
@@ -24,10 +32,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const applyTheme = (newTheme: Theme) => {
         const root = document.documentElement;
-        root.classList.remove('light', 'dark', 'entrepreneur');
+        root.classList.remove('light', 'dark');
         root.classList.add(newTheme);
-
-        // Force data-theme attribute for CSS selectors
         root.setAttribute('data-theme', newTheme);
     };
 

@@ -5,6 +5,11 @@ export const mockCards: CreditCard[] = [
     { id: "2", name: "Inter", limit: 10000, closingDay: 5, dueDay: 12, color: "orange", context: "PJ" },
 ];
 
+export const mockAccounts: any[] = [
+    { id: "1", name: "Conta Corrente", bank: "Nubank", balance: 1500.00, color: "purple", context: "PF" },
+    { id: "2", name: "Conta PJ", bank: "Inter", balance: 15000.00, color: "orange", context: "PJ" }
+];
+
 export const mockTransactions: Transaction[] = [
     {
         id: "1",

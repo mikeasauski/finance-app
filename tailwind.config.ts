@@ -13,8 +13,8 @@ const config: Config = {
             },
             colors: {
                 primary: {
-                    DEFAULT: "#2563EB", // Blue 600
-                    foreground: "#FFFFFF",
+                    DEFAULT: "var(--primary)",
+                    foreground: "var(--primary-foreground)",
                 },
                 secondary: {
                     DEFAULT: "#F1F5F9", // Slate 100

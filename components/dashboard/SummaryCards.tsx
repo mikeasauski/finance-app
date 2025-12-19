@@ -50,25 +50,52 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
         .filter(t => t.type === 'expense')
         .reduce((acc, curr) => acc + curr.amount, 0);
 
+    // Calculate Average Monthly Expense (Last 3 Months)
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+    const expensesLast3Months = transactions
+        .filter(t => t.type === 'expense' && t.context === context && new Date(t.date) >= threeMonthsAgo)
+        .reduce((acc, curr) => acc + curr.amount, 0);
+
+    const averageMonthlyExpense = expensesLast3Months / 3 || 1; // Avoid division by zero
+
+    // Business Metric: Runway (Days)
+    const runwayDays = Math.floor(balance / (averageMonthlyExpense / 30));
+
+    // Personal Metric: Financial Freedom (Months)
+    // Assuming "Invested" is represented by specific category or account type. 
+    // For prototype, we'll use "Investments" category or just Total Balance as "Net Worth" approximation for now.
+    // User prompt said: "Saldo Investido / Custo de Vida Mensal".
+    // Let's approximate "Invested" as balance in accounts with type 'investment' (if we had it) or just Total Balance for now.
+    const financialFreedomMonths = (balance / averageMonthlyExpense).toFixed(1);
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Balance Card */}
-            <div className="bg-blue-600 p-6 rounded-2xl text-white shadow-lg shadow-blue-600/20 relative overflow-hidden">
+            {/* Smart Health Widget */}
+            <div className={`p-6 rounded-2xl text-white shadow-lg relative overflow-hidden transition-all duration-500 ${context === 'PJ' ? 'bg-blue-600 shadow-blue-600/20' : 'bg-orange-500 shadow-orange-500/20'
+                }`}>
                 <div className="relative z-10">
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-2 bg-white/20 rounded-lg">
-                            <Wallet className="text-white" size={24} />
+                            {context === 'PJ' ? <ArrowUpRight className="text-white" size={24} /> : <Wallet className="text-white" size={24} />}
                         </div>
-                        <span className="text-sm font-medium bg-white/20 px-2 py-1 rounded-md">
-                            {t('total')}
+                        <span className="text-xs font-medium bg-white/20 px-2 py-1 rounded-md">
+                            {context === 'PJ' ? 'Pista de Decolagem' : 'Liberdade Financeira'}
                         </span>
                     </div>
-                    <div>
-                        <p className="text-blue-100 text-sm mb-1">{t('total_balance')}</p>
-                        <h3 className="text-3xl font-bold">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(balance)}
-                        </h3>
-                    </div>
+
+                    {context === 'PJ' ? (
+                        <div>
+                            <h3 className="text-3xl font-bold mb-1">{runwayDays} dias</h3>
+                            <p className="text-blue-100 text-sm">de caixa sem faturar</p>
+                        </div>
+                    ) : (
+                        <div>
+                            <h3 className="text-3xl font-bold mb-1">{financialFreedomMonths} meses</h3>
+                            <p className="text-orange-100 text-sm">de liberdade garantida</p>
+                        </div>
+                    )}
                 </div>
                 {/* Decorative Circles */}
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
@@ -82,7 +109,7 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                         <ArrowUpRight className="text-green-600" size={24} />
                     </div>
                     <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-md">
-                        +12%
+                        {t('income')}
                     </span>
                 </div>
                 <div>
@@ -100,7 +127,7 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                         <ArrowDownLeft className="text-red-600" size={24} />
                     </div>
                     <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-md">
-                        -5%
+                        {t('expense')}
                     </span>
                 </div>
                 <div>

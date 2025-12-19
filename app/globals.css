@@ -4,36 +4,38 @@
 
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 15 23 42;
-    --primary: 37 99 235;
-    /* Blue 600 */
-    --primary-foreground: 255 255 255;
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --primary: #2563eb;
+    /* Blue 600 (Business Default) */
+    --primary-foreground: #ffffff;
+    --radius: 0.5rem;
+  }
+
+  /* Personal Context Override - High Specificity */
+  html[data-context="PF"] {
+    --primary: #FF6B00;
+    /* Vibrant Orange */
+    --primary-foreground: #ffffff;
   }
 
   /* Dark Mode */
   :root[data-theme="dark"] {
-    --background: 15 23 42;
-    /* Slate 900 */
-    --foreground: 248 250 252;
-    /* Slate 50 */
-    --primary: 59 130 246;
-    /* Blue 500 */
-  }
-
-  /* Female Entrepreneur Theme */
-  :root[data-theme="entrepreneur"] {
-    --background: 255 241 242;
-    /* Rose 50 */
-    --foreground: 136 19 55;
-    /* Rose 900 */
-    --primary: 219 39 119;
-    /* Pink 600 */
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --primary: #3b82f6;
   }
 }
 
 body {
   @apply bg-gray-50 text-gray-900;
+  transition: all 0.5s ease;
+}
+
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
 }
 
 :root[data-theme="dark"] body {

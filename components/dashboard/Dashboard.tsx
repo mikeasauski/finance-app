@@ -1,7 +1,8 @@
+
 "use client";
 
-import React, { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, X, Wallet } from "lucide-react";
 import SummaryCards from "./SummaryCards";
 import GoalsWidget from "./GoalsWidget";
 import { BalanceChart } from "./BalanceChart";
@@ -18,12 +19,14 @@ import CreditCardForm from "../forms/CreditCardForm";
 import InvoiceView from "../credit-card/InvoiceView";
 import { CreditCard } from "@/types";
 
+import ProlaboreModal from "../modals/ProlaboreModal";
+
 export default function Dashboard() {
     const { t } = useLanguage();
-    const { transactions, cards, removeCard } = useFinance();
-    const [context, setContext] = useState<ContextType>('PF');
+    const { transactions, cards, removeCard, appContext: context, setAppContext: setContext, addTransaction, accounts } = useFinance();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+    const [isProlaboreModalOpen, setIsProlaboreModalOpen] = useState(false);
     const [editingCard, setEditingCard] = useState<CreditCard | null>(null);
     const [selectedInvoiceCard, setSelectedInvoiceCard] = useState<CreditCard | null>(null);
 
@@ -43,6 +46,27 @@ export default function Dashboard() {
         setEditingCard(null);
     };
 
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Calculate Balance
+    const balance = transactions
+        .filter(t => t.context === context && t.isPaid)
+        .reduce((acc, curr) => {
+            return curr.type === 'income' ? acc + curr.amount : acc - curr.amount;
+        }, 0);
+
+    const income = transactions
+        .filter(t => t.context === context && t.type === 'income')
+        .reduce((acc, curr) => acc + curr.amount, 0);
+
+    const expense = transactions
+        .filter(t => t.context === context && t.type === 'expense')
+        .reduce((acc, curr) => acc + curr.amount, 0);
+
     // Calculate invoice for a specific card, filtered by context
     const getCardInvoice = (cardId: string) => {
         return transactions
@@ -61,41 +85,47 @@ export default function Dashboard() {
         return today === bestDay;
     });
 
+    if (!mounted) {
+        return null; // or a loading skeleton
+    }
+
     return (
-        <div className="space-y-6 relative">
+        <div className="space-y-6 relative pt-16 md:pt-0">
+            {/* Centered Fixed Context Switcher */}
+            <div className="fixed top-20 md:top-4 left-0 right-0 flex justify-center z-30 pointer-events-none">
+                <div className="bg-white/80 backdrop-blur-md p-1 rounded-full shadow-lg border border-gray-200 flex pointer-events-auto">
+                    <button
+                        onClick={() => setContext('PF')}
+                        className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PF'
+                            ? 'bg-orange-500 text-white shadow-md transform scale-105'
+                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                            } `}
+                    >
+                        {t('personal')}
+                    </button>
+                    <button
+                        onClick={() => setContext('PJ')}
+                        className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PJ'
+                            ? 'bg-blue-600 text-white shadow-md transform scale-105'
+                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                            } `}
+                    >
+                        {t('business')}
+                    </button>
+                </div>
+            </div>
+
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 mt-8 md:mt-0">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-800">{t('dashboard')}</h2>
                     <p className="text-gray-500">{t('dashboard_subtitle')}</p>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    {/* Context Switcher */}
-                    <div className="bg-gray-100 p-1 rounded-lg flex">
-                        <button
-                            onClick={() => setContext('PF')}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${context === 'PF'
-                                ? 'bg-white text-blue-600 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            {t('personal')}
-                        </button>
-                        <button
-                            onClick={() => setContext('PJ')}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${context === 'PJ'
-                                ? 'bg-white text-blue-600 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            {t('business')}
-                        </button>
-                    </div>
-
+                <div className="flex items-center gap-4 w-full md:w-auto justify-end">
                     <button
                         onClick={() => setIsFormOpen(true)}
-                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
+                        className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-colors shadow-lg shadow-primary/20"
                     >
                         <Plus size={20} />
                         <span className="hidden md:inline">{t('new_transaction')}</span>
@@ -103,7 +133,26 @@ export default function Dashboard() {
                 </div>
             </div>
 
-
+            {/* Pro-labore Action Widget (Only for PJ) */}
+            {context === 'PJ' && (
+                <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h3 className="text-xl font-bold flex items-center gap-2">
+                            <Wallet className="text-green-100" />
+                            Pró-Labore
+                        </h3>
+                        <p className="text-green-100 mt-1">
+                            Realize a transferência de lucros para sua conta pessoal de forma simples.
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setIsProlaboreModalOpen(true)}
+                        className="bg-white text-green-600 px-6 py-3 rounded-xl font-bold hover:bg-green-50 transition-colors shadow-md whitespace-nowrap"
+                    >
+                        Lançar Pró-Labore
+                    </button>
+                </div>
+            )}
 
             {/* Summary Cards */}
             <SummaryCards context={context} />
@@ -206,6 +255,13 @@ export default function Dashboard() {
                         />
                     </div>
                 </div>
+            )}
+
+            {/* Prolabore Modal */}
+            {isProlaboreModalOpen && (
+                <ProlaboreModal
+                    onClose={() => setIsProlaboreModalOpen(false)}
+                />
             )}
         </div>
     );
