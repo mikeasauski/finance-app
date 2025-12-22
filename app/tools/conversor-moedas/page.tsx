@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { ArrowLeftRight, RefreshCw } from 'lucide-react';
 import CalculatorLayout from '@/components/tools/CalculatorLayout';
 import { TAX_TABLES_2025 } from '@/lib/tax_tables_2025';
+import { cn } from '@/lib/utils';
 
 // Mock rates for MVP (In production, fetch from API)
 const MOCK_RATES = {

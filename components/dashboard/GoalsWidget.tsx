@@ -8,8 +8,11 @@ import { useRouter } from "next/navigation";
 
 import { useLanguage } from "@/contexts/LanguageContext";
 
+import { useRouter } from "next/navigation";
+
 export default function GoalsWidget() {
     const router = useRouter();
+<<<<<<< HEAD
     const { t, locale } = useLanguage();
     const { goals } = useFinance();
 
@@ -35,10 +38,13 @@ export default function GoalsWidget() {
             default: return { bg: 'bg-muted', text: 'text-muted-foreground', bar: 'bg-muted-foreground' };
         }
     };
+=======
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
+<<<<<<< HEAD
                 <h3 className="font-semibold text-foreground">{t('my_goals')}</h3>
                 <button
                     onClick={() => router.push('/planning')}
@@ -46,6 +52,15 @@ export default function GoalsWidget() {
                     title={t('manage_goals')}
                 >
                     <Plus size={20} className="text-primary" />
+=======
+                <h3 className="font-semibold text-gray-800">Meus Objetivos</h3>
+                <button
+                    onClick={() => router.push('/planning')}
+                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                    title="Gerenciar Objetivos"
+                >
+                    <Plus size={20} className="text-blue-600" />
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
                 </button>
             </div>
 

@@ -3,7 +3,10 @@
 import { ContextType } from "@/types";
 import { ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
+<<<<<<< HEAD
 import { useLanguage } from "@/contexts/LanguageContext";
+=======
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
 import { startOfMonth, endOfMonth, isWithinInterval, parseISO } from "date-fns";
 
 interface SummaryCardsProps {
@@ -11,7 +14,10 @@ interface SummaryCardsProps {
 }
 
 export default function SummaryCards({ context }: SummaryCardsProps) {
+<<<<<<< HEAD
     const { t } = useLanguage();
+=======
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
     const { transactions: allTransactions, accounts } = useFinance();
 
     // Filter transactions by context
@@ -50,6 +56,7 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
         .filter(t => t.type === 'expense')
         .reduce((acc, curr) => acc + curr.amount, 0);
 
+<<<<<<< HEAD
     // Calculate Average Monthly Expense (Last 3 Months)
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
@@ -70,6 +77,8 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
     // Let's approximate "Invested" as balance in accounts with type 'investment' (if we had it) or just Total Balance for now.
     const financialFreedomMonths = (balance / averageMonthlyExpense).toFixed(1);
 
+=======
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Smart Health Widget */}
@@ -109,8 +118,13 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                     </span>
                 </div>
                 <div>
+<<<<<<< HEAD
                     <p className="text-muted-foreground text-sm mb-1">{t('income_month')}</p>
                     <h3 className="text-2xl font-bold text-foreground">
+=======
+                    <p className="text-gray-500 text-sm mb-1">Receitas (Este Mês)</p>
+                    <h3 className="text-2xl font-bold text-gray-800">
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(income)}
                     </h3>
                 </div>
@@ -127,8 +141,13 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                     </span>
                 </div>
                 <div>
+<<<<<<< HEAD
                     <p className="text-muted-foreground text-sm mb-1">{t('expense_month')}</p>
                     <h3 className="text-2xl font-bold text-foreground">
+=======
+                    <p className="text-gray-500 text-sm mb-1">Despesas (Este Mês)</p>
+                    <h3 className="text-2xl font-bold text-gray-800">
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(expense)}
                     </h3>
                 </div>

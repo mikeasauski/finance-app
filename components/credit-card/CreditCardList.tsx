@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { CreditCard } from "@/types";
 import { useFinance } from "@/contexts/FinanceContext";
@@ -20,6 +21,29 @@ export default function CreditCardList({ cards, onEdit, onDelete }: CreditCardLi
         if (confirm(t('confirm_delete_card', { cardName }))) {
             removeCard(id);
             showToast('success', t('card_deleted_success', { cardName }));
+=======
+"use client";
+
+import { CreditCard, Transaction } from "@/types";
+import { CreditCard as CardIcon, Calendar, CalendarClock, Trash2, Pencil } from "lucide-react";
+import { useFinance } from "@/contexts/FinanceContext";
+import { useToast } from "@/contexts/ToastContext";
+
+interface CreditCardListProps {
+    cards: CreditCard[];
+    transactions: Transaction[];
+    onEdit?: (card: CreditCard) => void;
+}
+
+export default function CreditCardList({ cards, transactions, onEdit }: CreditCardListProps) {
+    const { removeCard } = useFinance();
+    const { showToast } = useToast();
+
+    const handleDelete = (id: string, cardName: string) => {
+        if (confirm(`Tem certeza que deseja excluir o cartão ${cardName}?`)) {
+            removeCard(id);
+            showToast('success', `Cartão ${cardName} excluído com sucesso!`);
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
         }
     };
 
@@ -35,6 +59,7 @@ export default function CreditCardList({ cards, onEdit, onDelete }: CreditCardLi
                 const invoice = getCardInvoice(card.id);
 
                 return (
+<<<<<<< HEAD
                     <CreditCardWidget
                         key={card.id}
                         card={card}
@@ -43,6 +68,93 @@ export default function CreditCardList({ cards, onEdit, onDelete }: CreditCardLi
                         onDelete={() => handleDelete(card.id, card.name)}
                         onViewInvoice={() => console.log("View invoice", card.id)}
                     />
+=======
+                    <div key={card.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group relative">
+                        {/* Action Buttons (Visible on Hover) */}
+                        <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            {onEdit && (
+                                <button
+                                    onClick={() => onEdit(card)}
+                                    className="p-2 bg-white/20 hover:bg-white/30 text-white rounded-full"
+                                    title="Editar Cartão"
+                                >
+                                    <Pencil size={16} />
+                                </button>
+                            )}
+                            <button
+                                onClick={() => handleDelete(card.id, card.name)}
+                                className="p-2 bg-white/20 hover:bg-white/30 text-white rounded-full"
+                                title="Excluir Cartão"
+                            >
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
+
+                        {/* Card Header */}
+                        <div className={`${cardColor} p-6 text-white`}>
+                            <div className="flex justify-between items-start mb-8">
+                                <CardIcon size={32} className="opacity-80" />
+                                <span className="font-mono text-lg opacity-80">**** **** **** 1234</span>
+                            </div>
+                            <div className="flex justify-between items-end">
+                                <div>
+                                    <p className="text-xs opacity-80 mb-1">Titular</p>
+                                    <p className="font-medium">MICHAEL SCOTT</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-xs opacity-80 mb-1">Banco</p>
+                                    <p className="font-bold text-lg">{card.name}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Card Details */}
+                        <div className="p-6 space-y-6">
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <p className="text-sm text-gray-500 mb-1">Fatura Atual</p>
+                                    <p className="text-2xl font-bold text-gray-900">
+                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(invoice)}
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm text-gray-500 mb-1">Limite Disponível</p>
+                                    <p className="text-lg font-semibold text-green-600">
+                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(available)}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs text-gray-500">
+                                    <span>Uso do Limite</span>
+                                    <span>{progress.toFixed(1)}%</span>
+                                </div>
+                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div
+                                        className={`h-full rounded-full transition-all duration-500 ${progress > 90 ? 'bg-red-500' :
+                                            progress > 70 ? 'bg-yellow-500' : 'bg-green-500'
+                                            }`}
+                                        style={{ width: `${Math.min(progress, 100)}%` }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Dates */}
+                            <div className="flex gap-4 pt-4 border-t border-gray-50">
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <Calendar size={16} className="text-gray-400" />
+                                    <span>Fecha dia <strong>{card.closingDay}</strong></span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <CalendarClock size={16} className="text-gray-400" />
+                                    <span>Vence dia <strong>{card.dueDay}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
                 );
             })}
         </div>

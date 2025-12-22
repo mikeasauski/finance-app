@@ -27,7 +27,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="pt-BR">
+<<<<<<< HEAD
             <body className={`${inter.className} antialiased bg-gray-50 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300`}>
+=======
+            <body className={`${inter.className} antialiased bg-gray-50 transition-colors duration-300`}>
+>>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
                 <ErrorBoundary>
                     <ToastProvider>
                         <FinanceProvider>
