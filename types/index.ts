@@ -65,3 +65,29 @@ export interface Transaction {
         infinite: boolean;
     };
 }
+
+export type DocumentType =
+    | 'RG' | 'CPF' | 'CNH' | 'PASSPORT' | 'BIRTH_CERTIFICATE' | 'MARRIAGE_CERTIFICATE' | 'VOTER_ID' | 'RESERVIST' | 'WORK_CARD' | 'PIS' | 'CNS'
+    | 'CRLV' | 'IPVA' | 'INSURANCE'
+    | 'OAB' | 'CREA' | 'CRM' | 'CRO' | 'CRP' | 'CRC' | 'COREN' | 'CRECI' | 'CAU' | 'CRA' | 'CREF' | 'CRMV' | 'CRN' | 'SUSEP'
+    | 'CNPJ' | 'SOCIAL_CONTRACT' | 'MUNICIPAL_LICENSE' | 'STATE_REGISTRATION'
+    | 'PROOF_OF_ADDRESS' | 'LEASE_AGREEMENT' | 'PROPERTY_DEED'
+    | 'OTHER';
+
+export interface Document {
+    id: string;
+    type: DocumentType;
+    title: string;
+    number: string;
+    color: string;
+
+    // New fields
+    category?: string; // e.g., 'PERSONAL', 'VEHICLE'
+    fileUrl?: string; // Base64 string
+    fileName?: string;
+    fileType?: string; // MIME type
+    issueDate?: string;
+    expiryDate?: string;
+    issuingAuthority?: string;
+    notes?: string;
+}

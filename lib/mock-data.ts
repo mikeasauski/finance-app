@@ -1,8 +1,8 @@
 import { Transaction, CreditCard } from "@/types";
 
 export const mockCards: CreditCard[] = [
-    { id: "1", name: "Nubank", limit: 5000, closingDay: 20, dueDay: 27, color: "purple", context: "PF" },
-    { id: "2", name: "Inter", limit: 10000, closingDay: 5, dueDay: 12, color: "orange", context: "PJ" },
+    { id: "1", name: "Nubank", limit: 5000, closingDay: 20, dueDay: 27, color: "purple", context: "PF", bankId: "nubank" },
+    { id: "2", name: "Inter", limit: 10000, closingDay: 5, dueDay: 12, color: "orange", context: "PJ", bankId: "inter" },
 ];
 
 export const mockAccounts: any[] = [

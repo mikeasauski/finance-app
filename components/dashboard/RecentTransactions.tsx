@@ -62,28 +62,28 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
         .slice(0, 5);
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-6">{t('recent_transactions')}</h3>
+        <div className="bg-card rounded-2xl shadow-sm border border-border p-6">
+            <h3 className="text-lg font-bold text-foreground mb-6">{t('recent_transactions')}</h3>
             <div className="space-y-6">
                 {recent.map((transaction) => (
                     <div key={transaction.id} className="flex items-center justify-between group">
                         <div className="flex items-center gap-4">
                             <div className={`p-3 rounded-xl ${transaction.type === 'income'
-                                ? 'bg-green-100 text-green-600'
-                                : 'bg-red-100 text-red-600'
+                                ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                                : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
                                 }`}>
                                 {transaction.type === 'income' ? <ArrowUpRight size={20} /> : <ArrowDownLeft size={20} />}
                             </div>
                             <div>
-                                <p className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                <p className="font-medium text-foreground group-hover:text-primary transition-colors">
                                     {transaction.description}
                                     {transaction.installments && (
-                                        <span className="ml-2 text-xs font-normal text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                                        <span className="ml-2 text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                                             {transaction.installments.current}/{transaction.installments.total}
                                         </span>
                                     )}
                                 </p>
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                     <span>{transaction.category}</span>
                                     <span>•</span>
                                     <span>{format(parseISO(transaction.date), "d 'de' MMM", { locale })}</span>
@@ -94,12 +94,12 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className={`font-semibold ${transaction.type === 'income' ? 'text-green-600' : 'text-gray-900'
+                            <p className={`font-semibold ${transaction.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-foreground'
                                 }`}>
                                 {transaction.type === 'expense' ? '- ' : '+ '}
                                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(transaction.amount)}
                             </p>
-                            <div className="flex items-center justify-end gap-1 text-xs text-gray-400">
+                            <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground">
                                 {transaction.paymentMethod === 'credit' && <CreditCard size={12} />}
                                 <span className="capitalize">{transaction.paymentMethod}</span>
                             </div>

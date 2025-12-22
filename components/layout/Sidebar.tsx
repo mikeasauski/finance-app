@@ -14,7 +14,8 @@ import {
     Plus,
     Calendar,
     BarChart,
-    Target
+    Target,
+    Calculator
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TransactionForm from "@/components/forms/TransactionForm";
@@ -37,13 +38,14 @@ export default function Sidebar() {
         { name: t("reports"), href: "/reports", icon: BarChart },
         { name: t("planning"), href: "/planning", icon: Target },
         { name: t("income"), href: "/income", icon: Wallet },
+        { name: "Ferramentas", href: "/tools", icon: Calculator },
         { name: t("settings"), href: "/settings", icon: Settings },
     ];
 
     return (
         <>
             <aside className={cn(
-                "hidden md:flex flex-col sticky top-0 h-screen z-40 bg-white border-r border-border transition-all duration-300 ease-in-out flex-shrink-0",
+                "hidden md:flex flex-col sticky top-0 h-screen z-40 bg-sidebar border-r border-border transition-all duration-300 ease-in-out flex-shrink-0",
                 isCollapsed ? "w-20" : "w-64"
             )}>
                 <div className="p-4 flex flex-col h-full">
@@ -54,12 +56,12 @@ export default function Sidebar() {
                                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold">
                                     F
                                 </div>
-                                <h1 className="text-xl font-bold text-gray-900">Finance.ai</h1>
+                                <h1 className="text-xl font-bold text-sidebar-foreground">Finance.ai</h1>
                             </div>
                         )}
                         <button
                             onClick={() => setIsCollapsed(!isCollapsed)}
-                            className="p-2 hover:bg-gray-100 rounded-lg text-gray-500 transition-colors"
+                            className="p-2 hover:bg-muted rounded-lg text-muted-foreground transition-colors"
                         >
                             {isCollapsed ? <Menu size={20} /> : <ArrowLeftRight size={20} className="rotate-180" />}
                         </button>
@@ -77,7 +79,7 @@ export default function Sidebar() {
                                         "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors group relative",
                                         isActive
                                             ? "bg-primary/10 text-primary"
-                                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                                            : "text-muted-foreground hover:bg-muted hover:text-foreground",
                                         isCollapsed && "justify-center px-2"
                                     )}
                                 >
@@ -120,7 +122,7 @@ export default function Sidebar() {
                                 )}
                                 {!isCollapsed && (
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-gray-900 truncate">{user?.name || t('user')}</p>
+                                        <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.name || t('user')}</p>
                                         <button
                                             onClick={logout}
                                             className="text-xs text-red-500 hover:text-red-700 font-medium"

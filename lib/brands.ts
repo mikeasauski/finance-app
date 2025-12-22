@@ -20,7 +20,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#820AD1',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/nubank.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=nubank.com.br&sz=128'
     },
     {
         id: 'itau',
@@ -28,7 +28,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#EC7000',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/itau.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=itau.com.br&sz=128'
     },
     {
         id: 'bradesco',
@@ -36,7 +36,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#CC092F',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/bradesco.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=bradesco.com.br&sz=128'
     },
     {
         id: 'santander',
@@ -44,7 +44,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#EC0000',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/santander.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=santander.com.br&sz=128'
     },
     {
         id: 'bb',
@@ -52,7 +52,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#FBFD00',
         textColor: 'black',
-        logoUrl: 'https://logo.clearbit.com/bb.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=bb.com.br&sz=128'
     },
     {
         id: 'inter',
@@ -60,7 +60,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#FF7A00',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/bancointer.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=bancointer.com.br&sz=128'
     },
     {
         id: 'c6',
@@ -68,7 +68,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#242424',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/c6bank.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=c6bank.com.br&sz=128'
     },
     {
         id: 'btg',
@@ -76,7 +76,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#00204D',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/btgpactual.com'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=btgpactual.com&sz=128'
     },
     {
         id: 'xp',
@@ -84,7 +84,7 @@ export const BRANDS: Brand[] = [
         type: 'bank',
         color: '#000000',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/xpi.com.br'
+        logoUrl: 'https://www.google.com/s2/favicons?domain=xpi.com.br&sz=128'
     },
 
     // --- UTILITIES ---
@@ -94,7 +94,7 @@ export const BRANDS: Brand[] = [
         type: 'utility',
         color: '#00A551',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/enel.com.br',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=enel.com.br&sz=128',
         icon: Zap
     },
     {
@@ -103,7 +103,7 @@ export const BRANDS: Brand[] = [
         type: 'utility',
         color: '#0085CA',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/sabesp.com.br',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=sabesp.com.br&sz=128',
         icon: Droplets
     },
     {
@@ -112,7 +112,7 @@ export const BRANDS: Brand[] = [
         type: 'utility',
         color: '#0054A6',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/cpfl.com.br',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=cpfl.com.br&sz=128',
         icon: Zap
     },
     {
@@ -121,7 +121,7 @@ export const BRANDS: Brand[] = [
         type: 'utility',
         color: '#003692',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/tim.com.br',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=tim.com.br&sz=128',
         icon: Smartphone
     },
     {
@@ -130,7 +130,7 @@ export const BRANDS: Brand[] = [
         type: 'utility',
         color: '#660099',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/vivo.com.br',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=vivo.com.br&sz=128',
         icon: Smartphone
     },
     {
@@ -139,7 +139,7 @@ export const BRANDS: Brand[] = [
         type: 'utility',
         color: '#EF282C',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/claro.com.br',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=claro.com.br&sz=128',
         icon: Smartphone
     },
     {
@@ -148,7 +148,7 @@ export const BRANDS: Brand[] = [
         type: 'utility',
         color: '#00AEEF',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/net.com.br',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=net.com.br&sz=128',
         icon: Wifi
     },
 
@@ -159,7 +159,7 @@ export const BRANDS: Brand[] = [
         type: 'streamer',
         color: '#E50914',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/netflix.com',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=netflix.com&sz=128',
         icon: Tv
     },
     {
@@ -168,7 +168,7 @@ export const BRANDS: Brand[] = [
         type: 'streamer',
         color: '#1DB954',
         textColor: 'black',
-        logoUrl: 'https://logo.clearbit.com/spotify.com',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=spotify.com&sz=128',
         icon: Music
     },
     {
@@ -177,7 +177,7 @@ export const BRANDS: Brand[] = [
         type: 'streamer',
         color: '#00A8E1',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/amazon.com',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=amazon.com&sz=128',
         icon: ShoppingBag
     },
     {
@@ -186,7 +186,7 @@ export const BRANDS: Brand[] = [
         type: 'streamer',
         color: '#113CCF',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/disneyplus.com',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=disneyplus.com&sz=128',
         icon: Tv
     },
     {
@@ -195,7 +195,7 @@ export const BRANDS: Brand[] = [
         type: 'streamer',
         color: '#5D2E86',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/hbomax.com',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=hbomax.com&sz=128',
         icon: Tv
     },
     {
@@ -204,7 +204,7 @@ export const BRANDS: Brand[] = [
         type: 'streamer',
         color: '#FF3815',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/globoplay.globo.com',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=globoplay.globo.com&sz=128',
         icon: Tv
     },
     {
@@ -213,7 +213,7 @@ export const BRANDS: Brand[] = [
         type: 'streamer',
         color: '#FF0000',
         textColor: 'white',
-        logoUrl: 'https://logo.clearbit.com/youtube.com',
+        logoUrl: 'https://www.google.com/s2/favicons?domain=youtube.com&sz=128',
         icon: Tv
     }
 ];

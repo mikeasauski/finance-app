@@ -27,35 +27,35 @@ export default function GoalsWidget() {
 
     const getColorClasses = (color: string) => {
         switch (color) {
-            case 'orange': return { bg: 'bg-orange-100', text: 'text-orange-600', bar: 'bg-orange-500' };
-            case 'blue': return { bg: 'bg-blue-100', text: 'text-blue-600', bar: 'bg-blue-600' };
-            case 'green': return { bg: 'bg-green-100', text: 'text-green-600', bar: 'bg-green-600' };
-            case 'purple': return { bg: 'bg-purple-100', text: 'text-purple-600', bar: 'bg-purple-600' };
-            case 'red': return { bg: 'bg-red-100', text: 'text-red-600', bar: 'bg-red-600' };
-            default: return { bg: 'bg-gray-100', text: 'text-gray-600', bar: 'bg-gray-600' };
+            case 'orange': return { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400', bar: 'bg-orange-500' };
+            case 'blue': return { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-600 dark:text-blue-400', bar: 'bg-blue-600' };
+            case 'green': return { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-600 dark:text-green-400', bar: 'bg-green-600' };
+            case 'purple': return { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-600 dark:text-purple-400', bar: 'bg-purple-600' };
+            case 'red': return { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-600 dark:text-red-400', bar: 'bg-red-600' };
+            default: return { bg: 'bg-muted', text: 'text-muted-foreground', bar: 'bg-muted-foreground' };
         }
     };
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-gray-800">{t('my_goals')}</h3>
+                <h3 className="font-semibold text-foreground">{t('my_goals')}</h3>
                 <button
                     onClick={() => router.push('/planning')}
-                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                    className="p-1 hover:bg-muted rounded-full transition-colors"
                     title={t('manage_goals')}
                 >
-                    <Plus size={20} className="text-blue-600" />
+                    <Plus size={20} className="text-primary" />
                 </button>
             </div>
 
             <div className="space-y-4">
                 {goals.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500 text-sm bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                    <div className="text-center py-8 text-muted-foreground text-sm bg-muted/30 rounded-xl border border-dashed border-border">
                         <p>{t('no_goals_yet') || "No goals yet"}</p>
                         <button
                             onClick={() => router.push('/planning')}
-                            className="text-blue-600 font-medium mt-2 hover:underline"
+                            className="text-primary font-medium mt-2 hover:underline"
                         >
                             {t('create_goal') || "Create one"}
                         </button>
@@ -66,21 +66,21 @@ export default function GoalsWidget() {
                         const colors = getColorClasses(goal.color);
 
                         return (
-                            <div key={goal.id} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+                            <div key={goal.id} className="bg-card p-5 rounded-2xl shadow-sm border border-border flex items-center gap-4">
                                 <div className={`p-3 ${colors.bg} ${colors.text} rounded-xl`}>
                                     {getIcon(goal.icon)}
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex justify-between items-center mb-1">
-                                        <h4 className="font-semibold text-gray-800">{goal.name}</h4>
+                                        <h4 className="font-semibold text-foreground">{goal.name}</h4>
                                         <span className={`text-sm font-bold ${colors.text}`}>{percentage}%</span>
                                     </div>
-                                    <p className="text-xs text-gray-500 mb-2">
+                                    <p className="text-xs text-muted-foreground mb-2">
                                         {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD', maximumFractionDigits: 0 }).format(goal.currentAmount)}
                                         {' '}{t('of')}{' '}
                                         {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD', maximumFractionDigits: 0 }).format(goal.targetAmount)}
                                     </p>
-                                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-muted rounded-full overflow-hidden">
                                         <div className={`h-full ${colors.bar}`} style={{ width: `${percentage}%` }} />
                                     </div>
                                 </div>

@@ -7,12 +7,25 @@ import TransactionList from "@/components/transactions/TransactionList";
 import TransactionForm from "@/components/forms/TransactionForm";
 import { Transaction } from "@/types";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect } from "react";
 
 export default function IncomePage() {
     const { transactions } = useFinance();
     const { t, locale } = useLanguage();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isModalOpen]);
 
     // Filter only income transactions
     const incomeTransactions = transactions.filter(t => t.type === 'income');
@@ -41,8 +54,8 @@ export default function IncomePage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">{t('income_title')}</h1>
-                    <p className="text-gray-500">{t('income_subtitle')}</p>
+                    <h1 className="text-2xl font-bold text-foreground">{t('income_title')}</h1>
+                    <p className="text-muted-foreground">{t('income_subtitle')}</p>
                 </div>
                 <button
                     onClick={() => setIsModalOpen(true)}
@@ -54,28 +67,29 @@ export default function IncomePage() {
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-4">
-                        <div className="bg-green-100 p-3 rounded-xl text-green-600">
-                            <TrendingUp size={24} />
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
+                    <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                        <TrendingUp size={20} className="text-green-600 dark:text-green-400" />
+                        {t('income_history')}
+                    </h2>
+                    <div className="h-64 flex items-end justify-between gap-2">
                         <div>
-                            <p className="text-sm text-gray-500 font-medium">{t('total_received_general')}</p>
-                            <h3 className="text-2xl font-bold text-gray-900">
+                            <p className="text-sm text-muted-foreground font-medium">{t('total_received_general')}</p>
+                            <h3 className="text-2xl font-bold text-foreground">
                                 {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(totalIncome)}
                             </h3>
                         </div>
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
                     <div className="flex items-center gap-4">
-                        <div className="bg-blue-100 p-3 rounded-xl text-blue-600">
+                        <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-xl text-blue-600 dark:text-blue-400">
                             <Calendar size={24} />
                         </div>
                         <div>
-                            <p className="text-sm text-gray-500 font-medium">{t('this_month')}</p>
-                            <h3 className="text-2xl font-bold text-gray-900">
+                            <p className="text-sm text-muted-foreground font-medium">{t('this_month')}</p>
+                            <h3 className="text-2xl font-bold text-foreground">
                                 {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(currentMonthIncome)}
                             </h3>
                         </div>
@@ -85,7 +99,7 @@ export default function IncomePage() {
 
             {/* Income List */}
             <div>
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('income_history')}</h2>
+                <h2 className="text-lg font-semibold text-foreground mb-4">{t('income_history')}</h2>
                 <TransactionList
                     transactions={incomeTransactions}
                     onEdit={handleEdit}
@@ -94,20 +108,16 @@ export default function IncomePage() {
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl">
-                        <button
-                            onClick={handleCloseModal}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-                        >
-                            <X size={24} />
-                        </button>
-                        <TransactionForm
-                            onClose={handleCloseModal}
-                            initialData={editingTransaction || undefined}
-                            defaultType="income"
-                            lockType={true}
-                        />
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm">
+                    <div className="flex min-h-full items-center justify-center p-4">
+                        <div className="relative w-full max-w-md">
+                            <TransactionForm
+                                onClose={handleCloseModal}
+                                initialData={editingTransaction || undefined}
+                                defaultType="income"
+                                lockType={true}
+                            />
+                        </div>
                     </div>
                 </div>
             )}

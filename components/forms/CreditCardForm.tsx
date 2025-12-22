@@ -80,23 +80,23 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-            <h3 className="text-lg font-bold text-gray-800">
+        <form onSubmit={handleSubmit} className="bg-card p-6 rounded-2xl shadow-sm border border-border space-y-6">
+            <h3 className="text-lg font-bold text-foreground">
                 {initialData ? "Editar Cartão de Crédito" : "Novo Cartão de Crédito"}
             </h3>
 
             {/* Context Selector */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-2">Tipo de Cartão</label>
-                <div className="flex p-1 bg-gray-100 rounded-xl">
+                <label className="block text-xs font-medium text-muted-foreground mb-2">Tipo de Cartão</label>
+                <div className="flex p-1 bg-muted rounded-xl">
                     <button
                         type="button"
                         onClick={() => setContext('PF')}
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             context === 'PF'
-                                ? "bg-white text-blue-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
+                                ? "bg-card text-blue-600 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <User size={18} />
@@ -108,8 +108,8 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             context === 'PJ'
-                                ? "bg-white text-blue-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
+                                ? "bg-card text-blue-600 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <Briefcase size={18} />
@@ -120,7 +120,7 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
 
             {/* Bank Selection (Dropdown) */}
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Banco (Opcional)</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Banco (Opcional)</label>
                 <div className="relative">
                     <div className="absolute left-3 top-2.5 z-10 pointer-events-none">
                         {selectedBankId ? (
@@ -130,19 +130,19 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={bank.logoUrl} alt="" className="w-5 h-5 object-contain" />
                                 ) : (
-                                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-[8px] font-bold">
+                                    <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[8px] font-bold text-foreground">
                                         {bank?.name.substring(0, 2)}
                                     </div>
                                 );
                             })()
                         ) : (
-                            <Briefcase className="text-gray-400" size={18} />
+                            <Briefcase className="text-muted-foreground" size={18} />
                         )}
                     </div>
                     <select
                         value={selectedBankId}
                         onChange={(e) => handleBankSelect(e.target.value)}
-                        className="w-full pl-10 p-2 bg-white border border-gray-200 rounded-lg appearance-none"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg appearance-none text-foreground"
                     >
                         <option value="">Selecione um banco...</option>
                         {BANKS.map((bank) => (
@@ -156,27 +156,27 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
 
             {/* Name */}
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nome do Cartão</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Nome do Cartão</label>
                 <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background text-foreground"
                     placeholder="Ex: Nubank Gold"
                 />
             </div>
 
             {/* Limit */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Limite Total</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Limite Total</label>
                 <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-gray-400 text-sm font-bold pointer-events-none">R$</span>
+                    <span className="absolute left-3 top-2.5 text-muted-foreground text-sm font-bold pointer-events-none">R$</span>
                     <input
                         type="number"
                         value={limit}
                         onChange={(e) => setLimit(e.target.value)}
-                        className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg font-semibold"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg font-semibold text-foreground"
                         placeholder="0,00"
                         required
                     />
@@ -186,32 +186,32 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
             {/* Dates */}
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Dia Fechamento</label>
+                    <label className="block text-xs font-medium text-muted-foreground mb-1">Dia Fechamento</label>
                     <div className="relative">
-                        <Calendar className="absolute left-3 top-2.5 text-gray-400 pointer-events-none" size={18} />
+                        <Calendar className="absolute left-3 top-2.5 text-muted-foreground pointer-events-none" size={18} />
                         <input
                             type="number"
                             min="1"
                             max="31"
                             value={closingDay}
                             onChange={(e) => setClosingDay(e.target.value)}
-                            className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg"
+                            className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground"
                             placeholder="Dia"
                             required
                         />
                     </div>
                 </div>
                 <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Dia Vencimento</label>
+                    <label className="block text-xs font-medium text-muted-foreground mb-1">Dia Vencimento</label>
                     <div className="relative">
-                        <Calendar className="absolute left-3 top-2.5 text-gray-400 pointer-events-none" size={18} />
+                        <Calendar className="absolute left-3 top-2.5 text-muted-foreground pointer-events-none" size={18} />
                         <input
                             type="number"
                             min="1"
                             max="31"
                             value={dueDay}
                             onChange={(e) => setDueDay(e.target.value)}
-                            className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg"
+                            className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground"
                             placeholder="Dia"
                             required
                         />
@@ -221,7 +221,7 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
 
             {/* Color Picker */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-2">Cor do Cartão</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-2">Cor do Cartão</label>
                 <div className="flex gap-2">
                     {COLORS.map((c) => (
                         <button
@@ -231,7 +231,7 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
                             className={cn(
                                 "w-8 h-8 rounded-full transition-transform hover:scale-110",
                                 c.bg,
-                                color === c.hex || color === c.name ? "ring-2 ring-offset-2 ring-gray-400 scale-110" : ""
+                                color === c.hex || color === c.name ? "ring-2 ring-offset-2 ring-border scale-110" : ""
                             )}
                         />
                     ))}

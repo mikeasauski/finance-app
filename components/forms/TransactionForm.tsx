@@ -117,32 +117,32 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6 relative">
+        <form onSubmit={handleSubmit} className="bg-card p-6 rounded-2xl shadow-sm border border-border space-y-6 relative">
             {/* Close Button */}
             {onClose && (
                 <button
                     type="button"
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted transition-colors"
                 >
                     <X size={20} />
                 </button>
             )}
 
-            <h3 className="text-lg font-bold text-gray-800 pr-8">
+            <h3 className="text-lg font-bold text-foreground pr-8">
                 {initialData ? t('edit_transaction') : (defaultType === 'income' ? t('new_income') : t('new_transaction'))}
             </h3>
 
             {/* Status Selection (Paid vs Pending) */}
-            <div className="flex p-1 bg-gray-100 rounded-xl mb-6">
+            <div className="flex p-1 bg-muted rounded-xl mb-6">
                 <button
                     type="button"
                     onClick={() => setIsPaid(true)}
                     className={cn(
                         "flex-1 py-2 text-sm font-medium rounded-lg transition-all",
                         isPaid
-                            ? "bg-white text-gray-900 shadow-sm"
-                            : "text-gray-500 hover:text-gray-700"
+                            ? "bg-card text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
                     )}
                 >
                     {type === 'income' ? t('received') : t('paid')}
@@ -153,8 +153,8 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                     className={cn(
                         "flex-1 py-2 text-sm font-medium rounded-lg transition-all",
                         !isPaid
-                            ? "bg-white text-gray-900 shadow-sm"
-                            : "text-gray-500 hover:text-gray-700"
+                            ? "bg-card text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
                     )}
                 >
                     {type === 'income' ? t('to_receive') : t('pending')}
@@ -163,15 +163,15 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Type Selection - Only show if not locked */}
             {!lockType && (
-                <div className="flex p-1 bg-gray-100 rounded-xl">
+                <div className="flex p-1 bg-muted rounded-xl">
                     <button
                         type="button"
                         onClick={() => setType("expense")}
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             type === "expense"
-                                ? "bg-white text-red-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
+                                ? "bg-card text-red-600 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <ArrowDownLeft size={18} />
@@ -183,8 +183,8 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             type === "income"
-                                ? "bg-white text-green-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
+                                ? "bg-card text-green-600 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <ArrowUpRight size={18} />
@@ -194,9 +194,9 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             )}
 
             {/* Recurrence Options */}
-            <div className="space-y-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
+            <div className="space-y-3 p-4 bg-muted/50 rounded-xl border border-border">
                 <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700">{t('recurrence')}</label>
+                    <label className="text-sm font-medium text-foreground">{t('recurrence')}</label>
                     <div className="flex items-center gap-2">
                         <input
                             type="checkbox"
@@ -209,16 +209,16 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                     // We'll handle subtype selection in the radio buttons below
                                 }
                             }}
-                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
+                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-border bg-card"
                         />
-                        <label htmlFor="subscription" className="text-sm text-gray-600 cursor-pointer">
+                        <label htmlFor="subscription" className="text-sm text-muted-foreground cursor-pointer">
                             {t('enable')}
                         </label>
                     </div>
                 </div>
 
                 {isSubscription && (
-                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 pt-2 border-t border-gray-200">
+                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 pt-2 border-t border-border">
                         {/* Option 1: Fixed (Cobrança Recorrente) */}
                         <div className="flex items-start gap-3">
                             <input
@@ -235,14 +235,14 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                         {t('fixed_charge')}
                                     </label>
                                     <div className="group relative">
-                                        <HelpCircle size={14} className="text-gray-400 cursor-help" />
-                                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                        <HelpCircle size={14} className="text-muted-foreground cursor-help" />
+                                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-popover text-popover-foreground text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-border shadow-md">
                                             {t('type_fixed_help')}
-                                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-gray-800 rotate-45"></div>
+                                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-popover rotate-45 border-r border-b border-border"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500">{t('consumes_limit')}</p>
+                                <p className="text-xs text-muted-foreground">{t('consumes_limit')}</p>
                             </div>
                         </div>
 
@@ -254,22 +254,22 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                 name="recurrenceType"
                                 checked={recurrenceType === 'subscription'}
                                 onChange={() => setRecurrenceType('subscription')}
-                                className="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                className="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500 border-border bg-card"
                             />
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
-                                    <label htmlFor="type-subscription" className="text-sm font-medium text-gray-900 cursor-pointer">
+                                    <label htmlFor="type-subscription" className="text-sm font-medium text-foreground cursor-pointer">
                                         {t('subscription')}
                                     </label>
                                     <div className="group relative">
-                                        <HelpCircle size={14} className="text-gray-400 cursor-help" />
-                                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                        <HelpCircle size={14} className="text-muted-foreground cursor-help" />
+                                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-popover text-popover-foreground text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-border shadow-md">
                                             {t('type_sub_help')}
-                                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-gray-800 rotate-45"></div>
+                                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-popover rotate-45 border-r border-b border-border"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500">{t('no_consume_limit')}</p>
+                                <p className="text-xs text-muted-foreground">{t('no_consume_limit')}</p>
                             </div>
                         </div>
                     </div>
@@ -279,16 +279,16 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             {/* Subscription Day */}
             {isSubscription && (
                 <div className="animate-in fade-in slide-in-from-top-2">
-                    <label className="block text-xs font-medium text-gray-500 mb-1">{t('due_day')}</label>
+                    <label className="block text-xs font-medium text-muted-foreground mb-1">{t('due_day')}</label>
                     <div className="relative">
-                        <Calendar className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                        <Calendar className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
                         <input
                             type="number"
                             min="1"
                             max="31"
                             value={subscriptionDay}
                             onChange={(e) => setSubscriptionDay(e.target.value)}
-                            className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg"
+                            className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground"
                             placeholder="Dia (ex: 15)"
                             required={isSubscription}
                         />
@@ -298,15 +298,15 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Amount */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">{t('amount')}</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">{t('amount')}</label>
                 <div className="relative">
-                    <span className="absolute left-3 top-3 text-gray-400 text-sm font-bold">R$</span>
+                    <span className="absolute left-3 top-3 text-muted-foreground text-sm font-bold">R$</span>
                     <input
                         type="number"
                         step="0.01"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg font-semibold text-lg"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg font-semibold text-lg text-foreground"
                         placeholder="0,00"
                         required
                     />
@@ -315,14 +315,14 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Description */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">{t('description')}</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">{t('description')}</label>
                 <div className="relative">
-                    <FileText className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                    <FileText className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
                     <input
                         type="text"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground"
                         placeholder="Ex: Netflix, Aluguel..."
                         required
                     />
@@ -331,13 +331,13 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Category */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">{t('category')}</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">{t('category')}</label>
                 <div className="relative">
-                    <Tag className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                    <Tag className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
                     <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg appearance-none"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg appearance-none text-foreground"
                         required
                     >
                         <option value="">{t('select')}</option>
@@ -350,7 +350,7 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Brand Selection (Dropdown) */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">{t('brand')} ({t('optional')})</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">{t('brand')} ({t('optional')})</label>
                 <div className="relative">
                     <div className="absolute left-3 top-2.5 z-10 pointer-events-none">
                         {selectedBrandId ? (
@@ -360,19 +360,19 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={brand.logoUrl} alt="" className="w-5 h-5 object-contain" />
                                 ) : (
-                                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-[8px] font-bold">
+                                    <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[8px] font-bold text-foreground">
                                         {brand?.name.substring(0, 2)}
                                     </div>
                                 );
                             })()
                         ) : (
-                            <Tag className="text-gray-400" size={18} />
+                            <Tag className="text-muted-foreground" size={18} />
                         )}
                     </div>
                     <select
                         value={selectedBrandId}
                         onChange={(e) => setSelectedBrandId(e.target.value)}
-                        className="w-full pl-10 p-2 bg-white border border-gray-200 rounded-lg appearance-none"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg appearance-none text-foreground"
                     >
                         <option value="">{t('select_brand')}</option>
                         {BRANDS?.filter(b => b.type !== 'bank').map((brand) => (
@@ -386,14 +386,14 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Date (Only if not subscription, or initial date) */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">{t('date')}</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">{t('date')}</label>
                 <div className="relative">
-                    <Calendar className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                    <Calendar className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
                     <input
                         type="date"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
-                        className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground"
                         required
                     />
                 </div>
@@ -401,7 +401,7 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Payment Method */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-2">{t('payment_method')}</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-2">{t('payment_method')}</label>
                 <div className="grid grid-cols-3 gap-2">
                     {PAYMENT_METHODS?.map((method) => {
                         const Icon = method.icon;
@@ -413,8 +413,8 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                 className={cn(
                                     "flex flex-col items-center justify-center gap-1 p-2 rounded-lg border transition-all",
                                     paymentMethod === method.id
-                                        ? "border-blue-500 bg-blue-50 text-blue-700"
-                                        : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                                        : "border-border text-muted-foreground hover:bg-muted"
                                 )}
                             >
                                 <Icon size={16} />
@@ -426,15 +426,15 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             </div>
 
             {/* Paid Status Toggle */}
-            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
+            <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-xl border border-border">
                 <input
                     type="checkbox"
                     id="isPaid"
                     checked={isPaid}
                     onChange={(e) => setIsPaid(e.target.checked)}
-                    className="w-5 h-5 text-green-600 rounded focus:ring-green-500 border-gray-300"
+                    className="w-5 h-5 text-green-600 rounded focus:ring-green-500 border-border bg-card"
                 />
-                <label htmlFor="isPaid" className="text-sm font-medium text-gray-700 select-none cursor-pointer flex-1">
+                <label htmlFor="isPaid" className="text-sm font-medium text-foreground select-none cursor-pointer flex-1">
                     {isPaid ? `${t('paid')} / ${t('received')}` : `${t('pending')} / ${t('to_receive')}`}
                 </label>
             </div>
@@ -442,13 +442,13 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             {/* Account Selection (for non-credit) */}
             {paymentMethod !== 'credit' && (
                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                    <label className="block text-xs font-medium text-gray-500 mb-1">{t('account')} <span className="text-red-500">*</span></label>
+                    <label className="block text-xs font-medium text-muted-foreground mb-1">{t('account')} <span className="text-red-500">*</span></label>
                     <div className="relative">
-                        <Landmark className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                        <Landmark className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
                         <select
                             value={selectedAccountId}
                             onChange={(e) => setSelectedAccountId(e.target.value)}
-                            className="w-full pl-10 p-2 bg-white border border-gray-200 rounded-lg appearance-none"
+                            className="w-full pl-10 p-2 bg-background border border-border rounded-lg appearance-none text-foreground"
                             required
                         >
                             <option value="">{t('select_account')}</option>
@@ -462,13 +462,13 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
 
             {/* Credit Card Options */}
             {paymentMethod === 'credit' && (
-                <div className="space-y-4 p-4 bg-gray-50 rounded-xl border border-gray-100 animate-in fade-in slide-in-from-top-2">
+                <div className="space-y-4 p-4 bg-muted/50 rounded-xl border border-border animate-in fade-in slide-in-from-top-2">
                     <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('card')}</label>
+                        <label className="block text-xs font-medium text-muted-foreground mb-1">{t('card')}</label>
                         <select
                             value={selectedCardId}
                             onChange={(e) => setSelectedCardId(e.target.value)}
-                            className="w-full p-2 bg-white border border-gray-200 rounded-lg"
+                            className="w-full p-2 bg-background border border-border rounded-lg text-foreground"
                         >
                             {cards?.map(card => (
                                 <option key={card.id} value={card.id}>{card.name}</option>
@@ -476,14 +476,14 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                         </select>
                     </div>
                     <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">{t('installments')}</label>
+                        <label className="block text-xs font-medium text-muted-foreground mb-1">{t('installments')}</label>
                         <input
                             type="number"
                             min="1"
                             max="99"
                             value={installments}
                             onChange={(e) => setInstallments(e.target.value)}
-                            className="w-full p-2 bg-white border border-gray-200 rounded-lg"
+                            className="w-full p-2 bg-background border border-border rounded-lg text-foreground"
                             placeholder="1"
                         />
                     </div>

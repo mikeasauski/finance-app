@@ -4,48 +4,128 @@
 
 @layer base {
   :root {
-    --background: #ffffff;
-    --foreground: #0f172a;
-    --primary: #2563eb;
-    /* Blue 600 (Business Default) */
-    --primary-foreground: #ffffff;
+    /* Light Theme (Default) */
+    --background: 210 40% 98%;
+    /* gray-50 */
+    --foreground: 222.2 84% 4.9%;
+    /* slate-900 */
+
+    --card: 0 0% 100%;
+    /* white */
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221.2 83.2% 53.3%;
+    /* blue-600 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+
     --radius: 0.5rem;
   }
 
-  /* Personal Context Override - High Specificity */
-  html[data-context="PF"] {
-    --primary: #FF6B00;
-    /* Vibrant Orange */
-    --primary-foreground: #ffffff;
+  /* Dark Theme */
+  :root[data-theme="dark"] {
+    --background: 222.2 84% 4.9%;
+    /* slate-950 */
+    --foreground: 210 40% 98%;
+    /* slate-50 */
+
+    --card: 222.2 47.4% 11.2%;
+    /* slate-900 */
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 47.4% 11.2%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    /* blue-500 */
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    /* slate-800 */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    /* slate-800 */
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+
+    --sidebar: 222.2 47.4% 11.2%;
+    /* slate-900 */
+    --sidebar-foreground: 210 40% 98%;
   }
 
-  /* Dark Mode */
-  :root[data-theme="dark"] {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-    --primary: #3b82f6;
+  /* Entrepreneur Theme (Feminine/Pink) */
+  :root[data-theme="entrepreneur"] {
+    --background: 350 100% 98%;
+    /* rose-50 */
+    --foreground: 343 42% 15%;
+    /* rose-950 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 343 42% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 343 42% 15%;
+
+    --primary: 330 81% 60%;
+    /* pink-500 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 350 100% 98%;
+    --secondary-foreground: 330 81% 60%;
+
+    --muted: 350 100% 95%;
+    --muted-foreground: 343 42% 40%;
+
+    --accent: 350 100% 95%;
+    --accent-foreground: 330 81% 60%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 350 60% 90%;
+    --input: 350 60% 90%;
+    --ring: 330 81% 60%;
+
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 343 42% 15%;
   }
 }
 
 body {
-  @apply bg-gray-50 text-gray-900;
-  transition: all 0.5s ease;
+  @apply bg-background text-foreground;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 500ms;
-}
-
-:root[data-theme="dark"] body {
-  @apply bg-slate-900 text-slate-50;
-}
-
-:root[data-theme="entrepreneur"] body {
-  @apply bg-rose-50 text-rose-900;
-}
-
 
 
 @layer utilities {

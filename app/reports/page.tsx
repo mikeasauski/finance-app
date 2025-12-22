@@ -57,14 +57,14 @@ export default function ReportsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-gray-800">{t('reports_title')}</h1>
-                <p className="text-gray-500">{t('reports_subtitle')}</p>
+                <h1 className="text-2xl font-bold text-foreground">{t('reports_title')}</h1>
+                <p className="text-muted-foreground">{t('reports_subtitle')}</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Spending by Category (Pie Chart Representation) */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
+                    <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
                         <PieChart size={20} className="text-blue-600" />
                         {t('spending_by_category')}
                     </h2>
@@ -80,9 +80,9 @@ export default function ReportsPage() {
                                 }).join(', ')})`
                             }}
                         >
-                            <div className="absolute inset-0 m-8 bg-white rounded-full flex items-center justify-center flex-col shadow-inner">
-                                <span className="text-xs text-gray-500">{t('total')}</span>
-                                <span className="font-bold text-gray-900">
+                            <div className="absolute inset-0 m-8 bg-card rounded-full flex items-center justify-center flex-col shadow-inner">
+                                <span className="text-xs text-muted-foreground">{t('total')}</span>
+                                <span className="font-bold text-foreground">
                                     {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD', maximumFractionDigits: 0 }).format(totalExpense)}
                                 </span>
                             </div>
@@ -94,13 +94,13 @@ export default function ReportsPage() {
                                 <div key={item.category} className="flex items-center justify-between text-sm">
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                                        <span className="text-gray-700">{item.category}</span>
+                                        <span className="text-foreground">{item.category}</span>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <span className="font-medium text-gray-900">
+                                        <span className="font-medium text-foreground">
                                             {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(item.amount)}
                                         </span>
-                                        <span className="text-xs text-gray-500 w-8 text-right">{item.percentage.toFixed(0)}%</span>
+                                        <span className="text-xs text-muted-foreground w-8 text-right">{item.percentage.toFixed(0)}%</span>
                                     </div>
                                 </div>
                             ))}
@@ -109,8 +109,8 @@ export default function ReportsPage() {
                 </div>
 
                 {/* Income vs Expense (Bar Chart) */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
+                    <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
                         <BarChart size={20} className="text-purple-600" />
                         {t('income_vs_expense')}
                     </h2>
@@ -144,13 +144,13 @@ export default function ReportsPage() {
                                             style={{ height: `${Math.max(expenseHeight, 2)}%` }}
                                         ></div>
                                     </div>
-                                    <span className="text-xs text-gray-500 font-medium uppercase">{monthName}</span>
+                                    <span className="text-xs text-muted-foreground font-medium uppercase">{monthName}</span>
                                 </div>
                             );
                         })}
 
                         {chartData.length === 0 && (
-                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                                 {t('not_enough_data')}
                             </div>
                         )}

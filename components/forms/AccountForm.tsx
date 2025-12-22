@@ -61,23 +61,23 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-            <h3 className="text-lg font-bold text-gray-800">
+        <form onSubmit={handleSubmit} className="bg-card p-6 rounded-2xl shadow-sm border border-border space-y-6">
+            <h3 className="text-lg font-bold text-foreground">
                 {initialData ? "Editar Conta Bancária" : "Nova Conta Bancária"}
             </h3>
 
             {/* Context Selector */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-2">Tipo de Conta</label>
-                <div className="flex p-1 bg-gray-100 rounded-xl">
+                <label className="block text-xs font-medium text-muted-foreground mb-2">Tipo de Conta</label>
+                <div className="flex p-1 bg-muted rounded-xl">
                     <button
                         type="button"
                         onClick={() => setContext('PF')}
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             context === 'PF'
-                                ? "bg-white text-blue-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
+                                ? "bg-card text-blue-600 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <User size={18} />
@@ -89,8 +89,8 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             context === 'PJ'
-                                ? "bg-white text-blue-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
+                                ? "bg-card text-blue-600 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <Briefcase size={18} />
@@ -101,7 +101,7 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
 
             {/* Bank Selection */}
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Banco</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Banco</label>
                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                     {BANKS.map((bank) => (
                         <button
@@ -109,16 +109,16 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
                             type="button"
                             onClick={() => handleBankSelect(bank.id)}
                             className={`relative p-2 rounded-xl border transition-all flex flex-col items-center gap-1 ${selectedBankId === bank.id
-                                ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-500/20'
-                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 ring-2 ring-blue-500/20'
+                                : 'border-border hover:border-foreground/20 hover:bg-muted'
                                 } `}
                             title={bank.name}
                         >
-                            <div className="w-8 h-8 rounded-full overflow-hidden bg-white shadow-sm flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-full overflow-hidden bg-card shadow-sm flex items-center justify-center">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={bank.logoUrl} alt={bank.name} className="w-6 h-6 object-contain" />
                             </div>
-                            <span className="text-[10px] text-gray-600 truncate w-full text-center">{bank.name}</span>
+                            <span className="text-[10px] text-muted-foreground truncate w-full text-center">{bank.name}</span>
                             {selectedBankId === bank.id && (
                                 <div className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full p-0.5">
                                     <Check size={10} />
@@ -131,27 +131,27 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
 
             {/* Name */}
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nome da Conta</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Nome da Conta</label>
                 <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background text-foreground"
                     placeholder="Ex: Nubank Principal"
                 />
             </div>
 
             {/* Initial Balance */}
             <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Saldo Inicial</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Saldo Inicial</label>
                 <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-gray-400 text-sm font-bold">R$</span>
+                    <span className="absolute left-3 top-2.5 text-muted-foreground text-sm font-bold">R$</span>
                     <input
                         type="number"
                         value={initialBalance}
                         onChange={(e) => setInitialBalance(e.target.value)}
-                        className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg font-semibold"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg font-semibold text-foreground"
                         placeholder="0,00"
                         required
                     />
@@ -159,20 +159,20 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
             </div>
 
             {/* Favorite Toggle */}
-            <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
+            <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-100 dark:border-yellow-900/30">
                 <button
                     type="button"
                     onClick={() => setIsFavorite(!isFavorite)}
                     className={cn(
                         "p-2 rounded-full transition-colors",
-                        isFavorite ? "bg-yellow-400 text-white shadow-sm" : "bg-white text-gray-400 border border-gray-200"
+                        isFavorite ? "bg-yellow-400 text-white shadow-sm" : "bg-card text-muted-foreground border border-border"
                     )}
                 >
                     <Star size={20} fill={isFavorite ? "currentColor" : "none"} />
                 </button>
                 <div>
-                    <p className="text-sm font-medium text-gray-800">Conta Favorita</p>
-                    <p className="text-xs text-gray-500">Sugerir esta conta em novos lançamentos</p>
+                    <p className="text-sm font-medium text-foreground">Conta Favorita</p>
+                    <p className="text-xs text-muted-foreground">Sugerir esta conta em novos lançamentos</p>
                 </div>
             </div>
 

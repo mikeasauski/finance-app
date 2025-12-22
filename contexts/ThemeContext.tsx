@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useFinance } from "./FinanceContext";
 
-type Theme = 'light' | 'dark';
+type Theme = 'light' | 'dark' | 'entrepreneur';
 
 interface ThemeContextType {
     theme: Theme;

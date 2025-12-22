@@ -52,6 +52,18 @@ export default function Dashboard() {
         setMounted(true);
     }, []);
 
+    // Lock body scroll when any modal is open
+    useEffect(() => {
+        if (isFormOpen || isCardFormOpen || isProlaboreModalOpen || !!selectedInvoiceCard || !!editingCard) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isFormOpen, isCardFormOpen, isProlaboreModalOpen, selectedInvoiceCard, editingCard]);
+
     // Calculate Balance
     const balance = transactions
         .filter(t => t.context === context && t.isPaid)
@@ -93,7 +105,7 @@ export default function Dashboard() {
         <div className="space-y-6 relative pt-16 md:pt-0">
             {/* Centered Fixed Context Switcher */}
             <div className="fixed top-20 md:top-4 left-0 right-0 flex justify-center z-30 pointer-events-none">
-                <div className="bg-white/80 backdrop-blur-md p-1 rounded-full shadow-lg border border-gray-200 flex pointer-events-auto">
+                <div className="bg-card/80 backdrop-blur-md p-1 rounded-full shadow-lg border border-border flex pointer-events-auto">
                     <button
                         onClick={() => setContext('PF')}
                         className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PF'
@@ -107,7 +119,7 @@ export default function Dashboard() {
                         onClick={() => setContext('PJ')}
                         className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PJ'
                             ? 'bg-blue-600 text-white shadow-md transform scale-105'
-                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                             } `}
                     >
                         {t('business')}
@@ -118,8 +130,8 @@ export default function Dashboard() {
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 mt-8 md:mt-0">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800">{t('dashboard')}</h2>
-                    <p className="text-gray-500">{t('dashboard_subtitle')}</p>
+                    <h2 className="text-2xl font-bold text-foreground">{t('dashboard')}</h2>
+                    <p className="text-muted-foreground">{t('dashboard_subtitle')}</p>
                 </div>
 
                 <div className="flex items-center gap-4 w-full md:w-auto justify-end">
@@ -161,7 +173,7 @@ export default function Dashboard() {
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <h3 className="font-semibold text-gray-800">{t('my_cards')}</h3>
+                        <h3 className="font-semibold text-foreground">{t('my_cards')}</h3>
                         {/* {bestCard && (
                             <span className="hidden sm:inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full animate-pulse">
                                 <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
@@ -191,10 +203,10 @@ export default function Dashboard() {
 
                 {/* Middle Row: Charts & Expenses */}
                 <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="font-semibold text-gray-800">{t('cash_flow')}</h3>
-                            <select className="text-sm border-gray-200 rounded-lg text-gray-600">
+                            <h3 className="font-semibold text-foreground">{t('cash_flow')}</h3>
+                            <select className="text-sm border-border rounded-lg text-muted-foreground bg-transparent">
                                 <option>{t('last_6_months')}</option>
                             </select>
                         </div>
@@ -224,7 +236,7 @@ export default function Dashboard() {
 
             {/* Transaction Modal */}
             {isFormOpen && (
-                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm">
                     <div className="flex min-h-full items-center justify-center p-4">
                         <div className="relative w-full max-w-lg">
                             <button
@@ -241,8 +253,8 @@ export default function Dashboard() {
 
             {/* Card Modal */}
             {isCardFormOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+                    <div className="relative w-full max-w-md bg-card rounded-2xl shadow-2xl my-auto">
                         <button
                             onClick={handleCloseCardForm}
                             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"

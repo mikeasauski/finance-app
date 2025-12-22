@@ -30,28 +30,28 @@ export default function TransactionFilters({
 }: TransactionFiltersProps) {
     const { t } = useLanguage();
     return (
-        <div className="flex flex-col md:flex-row gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4 bg-card p-4 rounded-xl shadow-sm border border-border">
             {/* Search */}
             <div className="flex-1 relative">
-                <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+                <Search className="absolute left-3 top-2.5 text-muted-foreground" size={20} />
                 <input
                     type="text"
                     placeholder={t('search_placeholder')}
                     value={searchTerm}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full pl-10 p-2 bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground"
                 />
             </div>
 
             {/* Filters Row */}
             <div className="flex flex-wrap gap-3 items-center">
                 {/* Type Filter */}
-                <div className="flex bg-gray-100 p-1 rounded-lg">
+                <div className="flex bg-muted p-1 rounded-lg">
                     <button
                         onClick={() => onTypeFilterChange('all')}
                         className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${typeFilter === 'all'
-                            ? 'bg-white text-gray-900 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'bg-card text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
                             }`}
                     >
                         {t('all')}
@@ -59,8 +59,8 @@ export default function TransactionFilters({
                     <button
                         onClick={() => onTypeFilterChange('income')}
                         className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${typeFilter === 'income'
-                            ? 'bg-white text-green-600 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'bg-card text-green-600 dark:text-green-400 shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
                             }`}
                     >
                         {t('revenue')}
@@ -68,21 +68,21 @@ export default function TransactionFilters({
                     <button
                         onClick={() => onTypeFilterChange('expense')}
                         className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${typeFilter === 'expense'
-                            ? 'bg-white text-red-600 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
+                            ? 'bg-card text-red-600 dark:text-red-400 shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
                             }`}
                     >
                         {t('expense')}
                     </button>
                 </div>
 
-                <div className="h-6 w-px bg-gray-200 hidden md:block" />
+                <div className="h-6 w-px bg-border hidden md:block" />
 
                 {/* Category Filter */}
                 <select
                     value={categoryFilter}
                     onChange={(e) => onCategoryChange(e.target.value)}
-                    className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="px-3 py-2 bg-muted/50 border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                     <option value="">{t('all_categories')}</option>
                     {availableCategories.map(cat => (
@@ -94,7 +94,7 @@ export default function TransactionFilters({
                 <select
                     value={paymentMethodFilter}
                     onChange={(e) => onPaymentMethodChange(e.target.value)}
-                    className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="px-3 py-2 bg-muted/50 border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                     <option value="">{t('all_methods')}</option>
                     <option value="credit">{t('credit')}</option>

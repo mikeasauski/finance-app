@@ -71,6 +71,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
             cash_flow: "Fluxo de Caixa",
             last_6_months: "Últimos 6 meses",
             total_balance: "Saldo Atual",
+            balance: "Saldo em Contas",
+            current_balance: "Saldo Atual",
             income_month: "Receitas (Este Mês)",
             expense_month: "Despesas (Este Mês)",
             upcoming_bills: "Contas da Semana",
