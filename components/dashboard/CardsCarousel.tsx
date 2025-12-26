@@ -14,11 +14,8 @@ interface CardsCarouselProps {
     onViewInvoice?: (card: CreditCard) => void;
 }
 
-<<<<<<< HEAD
 import { useLanguage } from "@/contexts/LanguageContext";
 
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
 export default function CardsCarousel({
     cards,
     transactions,
@@ -27,10 +24,8 @@ export default function CardsCarousel({
     onDeleteCard,
     onViewInvoice
 }: CardsCarouselProps) {
-<<<<<<< HEAD
     const { t } = useLanguage();
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
+
     const getCardInvoice = (cardId: string, context: string) => {
         const today = new Date();
         return transactions
@@ -71,12 +66,7 @@ export default function CardsCarousel({
                     <div className="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-white flex items-center justify-center transition-colors">
                         <Plus size={24} />
                     </div>
-<<<<<<< HEAD
-                    <span className="text-sm font-medium">{t('new')}</span>
-=======
-                    <span className="text-sm font-medium">Novo</span>
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                </button>
+                    <span className="text-sm font-medium">{t('new')}</span>                </button>
             </div>
         </div>
     );

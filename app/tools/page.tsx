@@ -14,11 +14,8 @@ import {
     Target,
     Calculator
 } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ToolsPage() {
-    const { t } = useLanguage();
-
     const modules = [
         {
             title: "Calculadoras de Bolso",

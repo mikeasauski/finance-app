@@ -8,11 +8,10 @@ import { useRouter } from "next/navigation";
 
 import { useLanguage } from "@/contexts/LanguageContext";
 
-import { useRouter } from "next/navigation";
+
 
 export default function GoalsWidget() {
     const router = useRouter();
-<<<<<<< HEAD
     const { t, locale } = useLanguage();
     const { goals } = useFinance();
 
@@ -38,29 +37,16 @@ export default function GoalsWidget() {
             default: return { bg: 'bg-muted', text: 'text-muted-foreground', bar: 'bg-muted-foreground' };
         }
     };
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-<<<<<<< HEAD
-                <h3 className="font-semibold text-foreground">{t('my_goals')}</h3>
+        <div className="p-6 bg-card rounded-3xl shadow-sm border border-border">
+            <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-bold text-foreground">{t('goals')}</h3>
                 <button
                     onClick={() => router.push('/planning')}
-                    className="p-1 hover:bg-muted rounded-full transition-colors"
-                    title={t('manage_goals')}
+                    className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
                 >
-                    <Plus size={20} className="text-primary" />
-=======
-                <h3 className="font-semibold text-gray-800">Meus Objetivos</h3>
-                <button
-                    onClick={() => router.push('/planning')}
-                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-                    title="Gerenciar Objetivos"
-                >
-                    <Plus size={20} className="text-blue-600" />
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
+                    <Plus size={20} />
                 </button>
             </div>
 

@@ -3,21 +3,15 @@
 import { ContextType } from "@/types";
 import { ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
-<<<<<<< HEAD
 import { useLanguage } from "@/contexts/LanguageContext";
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-import { startOfMonth, endOfMonth, isWithinInterval, parseISO } from "date-fns";
+import { startOfMonth, endOfMonth, parseISO, isWithinInterval } from "date-fns";
 
 interface SummaryCardsProps {
     context: ContextType;
 }
 
 export default function SummaryCards({ context }: SummaryCardsProps) {
-<<<<<<< HEAD
     const { t } = useLanguage();
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
     const { transactions: allTransactions, accounts } = useFinance();
 
     // Filter transactions by context
@@ -56,7 +50,6 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
         .filter(t => t.type === 'expense')
         .reduce((acc, curr) => acc + curr.amount, 0);
 
-<<<<<<< HEAD
     // Calculate Average Monthly Expense (Last 3 Months)
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
@@ -77,34 +70,33 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
     // Let's approximate "Invested" as balance in accounts with type 'investment' (if we had it) or just Total Balance for now.
     const financialFreedomMonths = (balance / averageMonthlyExpense).toFixed(1);
 
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Smart Health Widget */}
             {/* Balance Card */}
-            <div className={`p-6 rounded-2xl text-white shadow-lg relative overflow-hidden transition-all duration-500 ${context === 'PJ' ? 'bg-blue-600 shadow-blue-600/20' : 'bg-orange-500 shadow-orange-500/20'
-                }`}>
-                <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-white/20 rounded-lg">
-                            <Wallet className="text-white" size={24} />
-                        </div>
-                        <span className="text-xs font-medium bg-white/20 px-2 py-1 rounded-md">
-                            {t('balance')}
-                        </span>
+            <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
+                <div className="flex justify-between items-start mb-4">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                        <Wallet className="text-blue-600 dark:text-blue-400" size={24} />
                     </div>
-
-                    <div>
-                        <p className="text-white/80 text-sm mb-1">{t('current_balance')}</p>
-                        <h3 className="text-3xl font-bold mb-1">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(balance)}
-                        </h3>
-                    </div>
+                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md">
+                        {t('total_balance')}
+                    </span>
                 </div>
-                {/* Decorative Circles */}
-                <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl" />
-                <div className="absolute -left-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                <div>
+                    <p className="text-muted-foreground text-sm mb-1">{t('current_balance')}</p>
+                    <h3 className="text-2xl font-bold text-foreground">
+                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(balance)}
+                    </h3>
+                    {context === 'PJ' ? (
+                        <p className="text-xs text-muted-foreground mt-2">
+                            Runway estimado: <span className="font-bold text-foreground">{runwayDays} dias</span>
+                        </p>
+                    ) : (
+                        <p className="text-xs text-muted-foreground mt-2">
+                            Liberdade Financeira: <span className="font-bold text-foreground">{financialFreedomMonths} meses</span>
+                        </p>
+                    )}
+                </div>
             </div>
 
             {/* Income Card */}
@@ -118,13 +110,8 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                     </span>
                 </div>
                 <div>
-<<<<<<< HEAD
                     <p className="text-muted-foreground text-sm mb-1">{t('income_month')}</p>
                     <h3 className="text-2xl font-bold text-foreground">
-=======
-                    <p className="text-gray-500 text-sm mb-1">Receitas (Este Mês)</p>
-                    <h3 className="text-2xl font-bold text-gray-800">
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(income)}
                     </h3>
                 </div>
@@ -141,14 +128,8 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                     </span>
                 </div>
                 <div>
-<<<<<<< HEAD
                     <p className="text-muted-foreground text-sm mb-1">{t('expense_month')}</p>
-                    <h3 className="text-2xl font-bold text-foreground">
-=======
-                    <p className="text-gray-500 text-sm mb-1">Despesas (Este Mês)</p>
-                    <h3 className="text-2xl font-bold text-gray-800">
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(expense)}
+                    <h3 className="text-2xl font-bold text-foreground">                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(expense)}
                     </h3>
                 </div>
             </div>

@@ -19,26 +19,20 @@ import {
 import { cn } from "@/lib/utils";
 import { useFinance } from "@/contexts/FinanceContext";
 import { useToast } from "@/contexts/ToastContext";
-<<<<<<< HEAD
 import { useLanguage } from "@/contexts/LanguageContext";
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-import { Transaction, TransactionType, TransactionSubType, PaymentMethod, ContextType } from "@/types";
-import { BRANDS, Brand } from "@/lib/brands";
+import { Transaction, TransactionType, PaymentMethod } from "@/types";
 import { CATEGORIES, PAYMENT_METHODS } from "@/lib/constants";
+import { BRANDS } from "@/lib/brands";
 
 interface TransactionFormProps {
-    onClose?: () => void;
     initialData?: Transaction;
+    onClose?: () => void;
     defaultType?: TransactionType;
     lockType?: boolean;
 }
 
-export default function TransactionForm({ onClose, initialData, defaultType, lockType = false }: TransactionFormProps) {
-<<<<<<< HEAD
+export default function TransactionForm({ initialData, onClose, defaultType, lockType }: TransactionFormProps) {
     const { t } = useLanguage();
-=======
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
     const { addTransaction, updateTransaction, cards = [], accounts = [] } = useFinance();
     const { showToast } = useToast();
 
@@ -123,7 +117,6 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
     };
 
     return (
-<<<<<<< HEAD
         <form onSubmit={handleSubmit} className="bg-card p-6 rounded-2xl shadow-sm border border-border space-y-6 relative">
             {/* Close Button */}
             {onClose && (
@@ -143,134 +136,61 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             {/* Status Selection (Paid vs Pending) */}
             <div className="flex p-1 bg-muted rounded-xl mb-6">
                 <button
-                    type="button"
-=======
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6 relative">
-            {/* Close Button */}
-            {onClose && (
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                    <X size={20} />
-                </button>
-            )}
-
-            <h3 className="text-lg font-bold text-gray-800 pr-8">
-                {initialData ? "Editar Transação" : (defaultType === 'income' ? "Nova Renda" : "Nova Transação")}
-            </h3>
-
-            {/* Status Selection (Paid vs Pending) */}
-            <div className="flex p-1 bg-gray-100 rounded-xl mb-6">
-                <button
-                    type="button"
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                    onClick={() => setIsPaid(true)}
+                    type="button" onClick={() => setIsPaid(true)}
                     className={cn(
                         "flex-1 py-2 text-sm font-medium rounded-lg transition-all",
                         isPaid
-<<<<<<< HEAD
                             ? "bg-card text-foreground shadow-sm"
                             : "text-muted-foreground hover:text-foreground"
                     )}
                 >
-                    {type === 'income' ? t('received') : t('paid')}
-=======
-                            ? "bg-white text-gray-900 shadow-sm"
-                            : "text-gray-500 hover:text-gray-700"
-                    )}
-                >
-                    {type === 'income' ? 'Recebido' : 'Pago'}
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                </button>
+                    {type === 'income' ? t('received') : t('paid')}                </button>
                 <button
                     type="button"
                     onClick={() => setIsPaid(false)}
                     className={cn(
                         "flex-1 py-2 text-sm font-medium rounded-lg transition-all",
                         !isPaid
-<<<<<<< HEAD
                             ? "bg-card text-foreground shadow-sm"
                             : "text-muted-foreground hover:text-foreground"
                     )}
                 >
-                    {type === 'income' ? t('to_receive') : t('pending')}
-=======
-                            ? "bg-white text-gray-900 shadow-sm"
-                            : "text-gray-500 hover:text-gray-700"
-                    )}
-                >
-                    {type === 'income' ? 'A Receber' : 'Pendente'}
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                </button>
+                    {type === 'income' ? t('to_receive') : t('pending')}                </button>
             </div>
 
             {/* Type Selection - Only show if not locked */}
             {!lockType && (
-<<<<<<< HEAD
-                <div className="flex p-1 bg-muted rounded-xl">
-=======
-                <div className="flex p-1 bg-gray-100 rounded-xl">
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                    <button
-                        type="button"
-                        onClick={() => setType("expense")}
-                        className={cn(
-                            "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
-                            type === "expense"
-<<<<<<< HEAD
-                                ? "bg-card text-red-600 shadow-sm"
-                                : "text-muted-foreground hover:text-foreground"
-                        )}
-                    >
-                        <ArrowDownLeft size={18} />
-                        {t('expense')}
-=======
-                                ? "bg-white text-red-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
-                        )}
-                    >
-                        <ArrowDownLeft size={18} />
-                        Despesa
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                    </button>
+                <div className="flex p-1 bg-muted rounded-xl">                    <button
+                    type="button"
+                    onClick={() => setType("expense")}
+                    className={cn(
+                        "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
+                        type === "expense"
+                            ? "bg-card text-red-600 shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                    )}
+                >
+                    <ArrowDownLeft size={18} />
+                    {t('expense')}                    </button>
                     <button
                         type="button"
                         onClick={() => setType("income")}
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             type === "income"
-<<<<<<< HEAD
                                 ? "bg-card text-green-600 shadow-sm"
                                 : "text-muted-foreground hover:text-foreground"
                         )}
                     >
                         <ArrowUpRight size={18} />
-                        {t('revenue')}
-=======
-                                ? "bg-white text-green-600 shadow-sm"
-                                : "text-gray-500 hover:text-gray-700"
-                        )}
-                    >
-                        <ArrowUpRight size={18} />
-                        Receita
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                    </button>
+                        {t('revenue')}                    </button>
                 </div>
             )}
 
             {/* Recurrence Options */}
-<<<<<<< HEAD
             <div className="space-y-3 p-4 bg-muted/50 rounded-xl border border-border">
                 <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-foreground">{t('recurrence')}</label>
-=======
-            <div className="space-y-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
-                <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700">Recorrência</label>
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                    <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium text-foreground">{t('recurrence')}</label>                    <div className="flex items-center gap-2">
                         <input
                             type="checkbox"
                             id="subscription"
@@ -282,28 +202,15 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                     // We'll handle subtype selection in the radio buttons below
                                 }
                             }}
-<<<<<<< HEAD
                             className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-border bg-card"
                         />
                         <label htmlFor="subscription" className="text-sm text-muted-foreground cursor-pointer">
-                            {t('enable')}
-=======
-                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
-                        />
-                        <label htmlFor="subscription" className="text-sm text-gray-600 cursor-pointer">
-                            Habilitar
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                        </label>
+                            {t('enable')}                        </label>
                     </div>
                 </div>
 
                 {isSubscription && (
-<<<<<<< HEAD
-                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 pt-2 border-t border-border">
-=======
-                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 pt-2 border-t border-gray-200">
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                        {/* Option 1: Fixed (Cobrança Recorrente) */}
+                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 pt-2 border-t border-border">                        {/* Option 1: Fixed (Cobrança Recorrente) */}
                         <div className="flex items-start gap-3">
                             <input
                                 type="radio"
@@ -316,7 +223,6 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                     <label htmlFor="type-fixed" className="text-sm font-medium text-gray-900 cursor-pointer">
-<<<<<<< HEAD
                                         {t('fixed_charge')}
                                     </label>
                                     <div className="group relative">
@@ -327,21 +233,7 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-xs text-muted-foreground">{t('consumes_limit')}</p>
-=======
-                                        Cobrança Recorrente
-                                    </label>
-                                    <div className="group relative">
-                                        <HelpCircle size={14} className="text-gray-400 cursor-help" />
-                                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                                            Esta opção é para utilizar em recorrências de Aluguel, Conta de água, Conta de luz, Conta de internet, Conta de Gás...
-                                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-gray-800 rotate-45"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-gray-500">Consome o limite total do cartão (de cartão de crédito).</p>
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                            </div>
+                                <p className="text-xs text-muted-foreground">{t('consumes_limit')}</p>                            </div>
                         </div>
 
                         {/* Option 2: Subscription (Assinatura Recorrente) */}
@@ -352,7 +244,6 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                 name="recurrenceType"
                                 checked={recurrenceType === 'subscription'}
                                 onChange={() => setRecurrenceType('subscription')}
-<<<<<<< HEAD
                                 className="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500 border-border bg-card"
                             />
                             <div className="flex-1">
@@ -368,26 +259,7 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-xs text-muted-foreground">{t('no_consume_limit')}</p>
-=======
-                                className="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                            />
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                    <label htmlFor="type-subscription" className="text-sm font-medium text-gray-900 cursor-pointer">
-                                        Assinatura Recorrente
-                                    </label>
-                                    <div className="group relative">
-                                        <HelpCircle size={14} className="text-gray-400 cursor-help" />
-                                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                                            Esta opção é para assinaturas digitais com cobranças mensais creditadas mensalmente do cartão de crédito.
-                                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-2 h-2 bg-gray-800 rotate-45"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-gray-500">Não consome o limite futuro, apenas o mês atual.</p>
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                            </div>
+                                <p className="text-xs text-muted-foreground">{t('no_consume_limit')}</p>                            </div>
                         </div>
                     </div>
                 )}
@@ -396,27 +268,15 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             {/* Subscription Day */}
             {isSubscription && (
                 <div className="animate-in fade-in slide-in-from-top-2">
-<<<<<<< HEAD
                     <label className="block text-xs font-medium text-muted-foreground mb-1">{t('due_day')}</label>
                     <div className="relative">
-                        <Calendar className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
-=======
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Dia do Vencimento</label>
-                    <div className="relative">
-                        <Calendar className="absolute left-3 top-2.5 text-gray-400" size={18} />
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                        <input
+                        <Calendar className="absolute left-3 top-2.5 text-muted-foreground" size={18} />                        <input
                             type="number"
                             min="1"
                             max="31"
                             value={subscriptionDay}
                             onChange={(e) => setSubscriptionDay(e.target.value)}
-<<<<<<< HEAD
-                            className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground"
-=======
-                            className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg"
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                            placeholder="Dia (ex: 15)"
+                            className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground" placeholder="Dia (ex: 15)"
                             required={isSubscription}
                         />
                     </div>
@@ -449,12 +309,7 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                         type="text"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-<<<<<<< HEAD
-                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground"
-=======
-                        className="w-full pl-10 p-2 bg-gray-50 border border-gray-200 rounded-lg"
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                        placeholder="Ex: Netflix, Aluguel..."
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg text-foreground" placeholder="Ex: Netflix, Aluguel..."
                         required
                     />
                 </div>
@@ -471,12 +326,7 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                         className="w-full pl-10 p-2 bg-background border border-border rounded-lg appearance-none text-foreground"
                         required
                     >
-<<<<<<< HEAD
-                        <option value="">{t('select')}</option>
-=======
-                        <option value="">Selecione...</option>
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                        {CATEGORIES?.map(cat => (
+                        <option value="">{t('select')}</option>                        {CATEGORIES?.map(cat => (
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
@@ -484,45 +334,7 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             </div>
 
             {/* Brand Selection (Dropdown) */}
-<<<<<<< HEAD
-=======
-            <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Marca / Empresa (Opcional)</label>
-                <div className="relative">
-                    <div className="absolute left-3 top-2.5 z-10 pointer-events-none">
-                        {selectedBrandId ? (
-                            (() => {
-                                const brand = BRANDS?.find(b => b.id === selectedBrandId);
-                                return brand?.logoUrl ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={brand.logoUrl} alt="" className="w-5 h-5 object-contain" />
-                                ) : (
-                                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-[8px] font-bold">
-                                        {brand?.name.substring(0, 2)}
-                                    </div>
-                                );
-                            })()
-                        ) : (
-                            <Tag className="text-gray-400" size={18} />
-                        )}
-                    </div>
-                    <select
-                        value={selectedBrandId}
-                        onChange={(e) => setSelectedBrandId(e.target.value)}
-                        className="w-full pl-10 p-2 bg-white border border-gray-200 rounded-lg appearance-none"
-                    >
-                        <option value="">Selecione uma marca...</option>
-                        {BRANDS?.filter(b => b.type !== 'bank').map((brand) => (
-                            <option key={brand.id} value={brand.id}>
-                                {brand.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </div>
 
-            {/* Date (Only if not subscription, or initial date) */}
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
             <div>
                 <label className="block text-xs font-medium text-muted-foreground mb-1">{t('brand')} ({t('optional')})</label>
                 <div className="relative">
@@ -600,19 +412,14 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
             </div>
 
             {/* Paid Status Toggle */}
-<<<<<<< HEAD
-            <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-xl border border-border">
-=======
-            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                <input
-                    type="checkbox"
-                    id="isPaid"
-                    checked={isPaid}
-                    onChange={(e) => setIsPaid(e.target.checked)}
-<<<<<<< HEAD
-                    className="w-5 h-5 text-green-600 rounded focus:ring-green-500 border-border bg-card"
-                />
+
+            <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-xl border border-border">                <input
+                type="checkbox"
+                id="isPaid"
+                checked={isPaid}
+                onChange={(e) => setIsPaid(e.target.checked)}
+                className="w-5 h-5 text-green-600 rounded focus:ring-green-500 border-border bg-card"
+            />
                 <label htmlFor="isPaid" className="text-sm font-medium text-foreground select-none cursor-pointer flex-1">
                     {isPaid ? `${t('paid')} / ${t('received')}` : `${t('pending')} / ${t('to_receive')}`}
                 </label>
@@ -623,73 +430,17 @@ export default function TransactionForm({ onClose, initialData, defaultType, loc
                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
                     <label className="block text-xs font-medium text-muted-foreground mb-1">{t('account')} <span className="text-red-500">*</span></label>
                     <div className="relative">
-                        <Landmark className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
-=======
-                    className="w-5 h-5 text-green-600 rounded focus:ring-green-500 border-gray-300"
-                />
-                <label htmlFor="isPaid" className="text-sm font-medium text-gray-700 select-none cursor-pointer flex-1">
-                    {isPaid ? "Pago / Recebido" : "Pendente / A Pagar"}
-                </label>
-            </div>
-
-            {/* Account Selection (for non-credit, non-cash) */}
-            {paymentMethod !== 'credit' && paymentMethod !== 'cash' && (
-                <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Conta Bancária {isPaid ? "" : "(Opcional)"}</label>
-                    <div className="relative">
-                        <Landmark className="absolute left-3 top-2.5 text-gray-400" size={18} />
-                        <select
-                            value={selectedAccountId}
-                            onChange={(e) => setSelectedAccountId(e.target.value)}
-                            className="w-full pl-10 p-2 bg-white border border-gray-200 rounded-lg appearance-none"
-                            required={isPaid}
-                        >
-                            <option value="">Selecione a conta...</option>
-                            {accounts?.map(acc => (
-                                <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })})</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-            )}
-
-            {/* Credit Card Options */}
-            {paymentMethod === 'credit' && (
-                <div className="space-y-4 p-4 bg-gray-50 rounded-xl border border-gray-100 animate-in fade-in slide-in-from-top-2">
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Cartão</label>
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                        <select
+                        <Landmark className="absolute left-3 top-2.5 text-muted-foreground" size={18} />                        <select
                             value={selectedAccountId}
                             onChange={(e) => setSelectedAccountId(e.target.value)}
                             className="w-full pl-10 p-2 bg-background border border-border rounded-lg appearance-none text-foreground"
                             required
                         >
-<<<<<<< HEAD
                             <option value="">{t('select_account')}</option>
                             {accounts?.map(acc => (
                                 <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })})</option>
                             ))}
-                        </select>
-=======
-                            {cards?.map(card => (
-                                <option key={card.id} value={card.id}>{card.name}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Quantidade de Parcelas</label>
-                        <input
-                            type="number"
-                            min="1"
-                            max="99"
-                            value={installments}
-                            onChange={(e) => setInstallments(e.target.value)}
-                            className="w-full p-2 bg-white border border-gray-200 rounded-lg"
-                            placeholder="1"
-                        />
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
-                    </div>
+                        </select>                    </div>
                 </div>
             )}
 

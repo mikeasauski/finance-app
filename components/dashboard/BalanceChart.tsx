@@ -4,18 +4,11 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { useFinance } from "@/contexts/FinanceContext";
 import { useMemo } from "react";
 import { startOfMonth, subMonths, format, endOfMonth, isWithinInterval, parseISO } from "date-fns";
-<<<<<<< HEAD
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function BalanceChart() {
     const { transactions } = useFinance();
     const { locale } = useLanguage();
-=======
-import { ptBR } from "date-fns/locale";
-
-export function BalanceChart() {
-    const { transactions } = useFinance();
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
 
     const data = useMemo(() => {
         const today = new Date();
@@ -23,11 +16,7 @@ export function BalanceChart() {
             const date = subMonths(today, 5 - i);
             return {
                 date,
-<<<<<<< HEAD
                 monthName: format(date, 'MMM', { locale }).toUpperCase(),
-=======
-                monthName: format(date, 'MMM', { locale: ptBR }).toUpperCase(),
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
                 income: 0,
                 expense: 0
             };
@@ -43,7 +32,7 @@ export function BalanceChart() {
                 if (isWithinInterval(transactionDate, { start, end })) {
                     if (transaction.type === 'income') {
                         month.income += transaction.amount;
-                    } else {
+                    } else if (transaction.type === 'expense') {
                         month.expense += transaction.amount;
                     }
                 }
@@ -51,11 +40,7 @@ export function BalanceChart() {
         });
 
         return last6Months;
-<<<<<<< HEAD
     }, [transactions, locale]);
-=======
-    }, [transactions]);
->>>>>>> 20c76385b3b74a669ce585ebdf2328dab29f21dc
 
     return (
         <div className="h-[220px] w-full">

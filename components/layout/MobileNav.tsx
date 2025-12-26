@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ArrowLeftRight, Plus, Target, User, CreditCard } from "lucide-react";
+import { LayoutDashboard, ArrowLeftRight, Plus, Target, User, CreditCard, Calculator } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
@@ -19,6 +19,7 @@ export default function MobileNav() {
         { name: t("transactions"), href: "/transactions", icon: ArrowLeftRight },
         { name: "FAB", href: "#", icon: Plus }, // Placeholder for FAB logic
         { name: t("planning"), href: "/planning", icon: Target },
+        { name: "Ferramentas", href: "/tools", icon: Calculator },
         { name: t("settings"), href: "/settings", icon: User },
     ];
 

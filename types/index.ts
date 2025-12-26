@@ -16,6 +16,7 @@ export interface CreditCard {
     context: ContextType;
     bankId?: string;
     isFavorite?: boolean;
+    invoice?: number;
 }
 
 export interface Goal {

@@ -6,6 +6,7 @@ interface UserProfile {
     name: string;
     photo?: string;
     pin: string;
+    email?: string;
 }
 
 interface UserContextType {
