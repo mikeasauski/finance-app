@@ -4,7 +4,7 @@ export type TransactionType = 'income' | 'expense';
 
 export type TransactionSubType = 'daily' | 'installment' | 'fixed' | 'subscription';
 
-export type PaymentMethod = 'credit' | 'debit' | 'cash' | 'pix' | 'transfer';
+export type PaymentMethod = 'credit' | 'debit' | 'cash' | 'pix' | 'transfer' | 'boleto';
 
 export interface CreditCard {
     id: string;

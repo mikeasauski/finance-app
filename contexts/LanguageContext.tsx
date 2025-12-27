@@ -118,7 +118,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
             fixed_charge: "Cobrança Recorrente",
             type_fixed_help: "Esta opção é para utilizar em recorrências de Aluguel, Conta de água, Conta de luz...",
             consumes_limit: "Consome o limite total do cartão (de cartão de crédito).",
-            subscription: "Assinatura Recorrente",
+            subscription: "Assinatura",
             type_sub_help: "Esta opção é para assinaturas digitais com cobranças mensais...",
             no_consume_limit: "Não consome o limite futuro, apenas o mês atual.",
             amount: "Valor",
@@ -131,6 +131,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
             account: "Conta Bancária",
             select_account: "Selecione a conta...",
             card: "Cartão",
+            select_card: "Selecione o cartão...",
             installments: "Quantidade de Parcelas",
             save_changes: "Salvar Alterações",
             save_transaction: "Salvar Transação",
@@ -139,6 +140,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
             pix: "Pix",
             cash: "Dinheiro",
             transfer: "Transferência",
+            boleto: "Boleto",
             installment_prefix: "Parcela",
 
             // Icons

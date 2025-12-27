@@ -1,4 +1,4 @@
-import { CreditCard, Banknote, Smartphone, ArrowRightLeft, QrCode } from "lucide-react";
+import { CreditCard, Banknote, Smartphone, ArrowRightLeft, QrCode, Barcode } from "lucide-react";
 
 export const CATEGORIES = [
     "Alimentação",
@@ -19,6 +19,7 @@ export const PAYMENT_METHODS = [
     { id: 'pix', label: 'Pix', icon: QrCode },
     { id: 'cash', label: 'Dinheiro', icon: Banknote },
     { id: 'transfer', label: 'Transferência', icon: ArrowRightLeft },
+    { id: 'boleto', label: 'Boleto', icon: Barcode },
 ];
 
 export const DOCUMENT_CATEGORIES = {

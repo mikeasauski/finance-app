@@ -344,25 +344,96 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         }));
     };
 
+    // Helper to calculate the due date based on purchase date and card settings
+    const calculateCardDueDate = (purchaseDate: Date, closingDay: number, dueDay: number): Date => {
+        const date = new Date(purchaseDate);
+        const pDay = date.getDate();
+        const pMonth = date.getMonth();
+        const pYear = date.getFullYear();
+
+        // If purchase is on or after closing day, it goes to next month's invoice
+        // Invoice Month is the month where the Due Date falls.
+        // Usually:
+        // Closing Day 25, Due Day 5 (Next Month).
+        // Purchase 20th Jan -> Due 5th Feb.
+        // Purchase 26th Jan -> Due 5th Mar.
+
+        // Let's standardize:
+        // "Invoice Month" = The month of the Due Date.
+
+        let targetMonth = pMonth;
+        let targetYear = pYear;
+
+        if (pDay >= closingDay) {
+            // Moves to next billing cycle
+            targetMonth++;
+        }
+
+        // If Due Day is smaller than Closing Day, it usually means Due Day is in the NEXT month relative to the "Open" period.
+        // Example: Open 26th Jan -> Close 25th Feb -> Due 5th Mar.
+        // Purchase 20th Feb (Before Close) -> Due 5th Mar.
+        // Purchase 26th Feb (After Close) -> Due 5th Apr.
+
+        // However, the simple logic "If day >= closing, add 1 month to due date" works for most cases 
+        // IF we assume the "Base Due Date" is already in the same/next month relative to purchase.
+
+        // Let's try a robust approach:
+        // 1. Determine the "Billing Cycle End Date" for this purchase.
+        //    If pDay < closingDay, Cycle End is in current month (or next if closing < pDay? No).
+        //    Actually, let's stick to the user requirement: "Best Day = Closing Day".
+
+        // Case 1: Purchase 10th. Closing 20th. Due 30th.
+        // pDay < closing. Due Date = 30th of THIS month.
+
+        // Case 2: Purchase 25th. Closing 20th. Due 5th (Next Month).
+        // pDay >= closing. Due Date = 5th of NEXT month? 
+        // Wait, if Closing is 20th and Due is 5th, the Due Date for the period ending 20th Jan is 5th Feb.
+        // So if I buy on 10th Jan (< 20), it falls in period ending 20th Jan, due 5th Feb.
+        // If I buy on 25th Jan (>= 20), it falls in period ending 20th Feb, due 5th Mar.
+
+        // So we always add at least 0 or 1 month for the "Cycle", AND maybe another month if Due Day < Closing Day?
+
+        // Let's simplify. Most cards: 
+        // Closing 25, Due 5 (Next Month).
+        // Closing 10, Due 20 (Same Month).
+
+        // Logic:
+        // 1. Start with Due Date in the SAME month as Purchase.
+        // 2. If Due Day < Closing Day, it implies Due Date is always next month relative to Closing.
+        //    BUT we are looking at Purchase Date.
+
+        // Let's use the "Month Offset" logic.
+        // Base: Purchase Month.
+        // If pDay >= closingDay: Add 1 Month to Base.
+        // If dueDay < closingDay: Add 1 Month to Base (because Due Date is next month relative to closing).
+
+        // Example 1: Closing 25, Due 5.
+        // Purchase 10th Jan. pDay < closing. Base = Jan. due < closing -> Add 1. Result: Feb 5th. Correct.
+        // Purchase 26th Jan. pDay >= closing. Base = Jan + 1 = Feb. due < closing -> Add 1. Result: Mar 5th. Correct.
+
+        // Example 2: Closing 10, Due 20.
+        // Purchase 5th Jan. pDay < closing. Base = Jan. due > closing -> Add 0. Result: Jan 20th. Correct.
+        // Purchase 15th Jan. pDay >= closing. Base = Jan + 1 = Feb. due > closing -> Add 0. Result: Feb 20th. Correct.
+
+        if (dueDay < closingDay) {
+            targetMonth++;
+        }
+
+        // Handle Year Rollover handled by Date constructor
+        const dueDate = new Date(targetYear, targetMonth, dueDay);
+        return dueDate;
+    };
+
     const addTransaction = (transaction: Transaction) => {
         try {
-            // Check limits before adding
-            // If status is 'pending', we might skip balance check for Debit, 
-            // but for Credit, it still consumes limit if it's a purchase?
-            // User said "Lançar despesas fixas e futuras... e se sim utilizar ou o dinheiro em conta... ou cartao".
-            // If pending, it's a "Bill to Pay". It doesn't consume account balance yet.
-            // Does it consume Credit Limit? Usually yes if it's a credit purchase.
-            // But if it's "Pending" on Credit Card, it means "I will swipe the card later"? Or "I swiped but it's pending"?
-            // Let's assume Pending = Not yet deducted from Account / Not yet charged to Card (Plan).
-            // So we SKIP limit check if pending.
-
             if (transaction.status === 'paid') {
                 checkTransactionLimit(transaction);
             }
         } catch (e: any) {
             alert(e.message);
-            return; // Stop addition
+            return;
         }
+
 
         if (transaction.installments && transaction.installments.total > 1) {
             const newTransactions: Transaction[] = [];
@@ -370,15 +441,21 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
             const baseDate = new Date(transaction.date);
 
             for (let i = 0; i < transaction.installments.total; i++) {
-                const date = new Date(baseDate);
-                date.setMonth(baseDate.getMonth() + i);
+                // Calculate the "Purchase Date" for this installment
+                // Usually installments are 30 days apart or same day next month.
+                // Let's use same day next month.
+                const purchaseDate = new Date(baseDate);
+                purchaseDate.setMonth(baseDate.getMonth() + i);
+
+                // Adjust for Smart Dating
+                const finalDate = purchaseDate.toISOString();
 
                 newTransactions.push({
                     ...transaction,
                     id: crypto.randomUUID(),
                     description: `${transaction.description} (${i + 1}/${transaction.installments.total})`,
                     amount: installmentAmount,
-                    date: date.toISOString(),
+                    date: finalDate,
                     installments: {
                         current: i + 1,
                         total: transaction.installments.total
@@ -391,47 +468,36 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
             const baseDate = new Date(transaction.date);
             const targetDay = transaction.recurrence?.day || baseDate.getDate();
 
-            // Generate for next 24 months (2 years)
             const monthsToGenerate = transaction.recurrence?.infinite ? 24 : 12;
 
             for (let i = 0; i < monthsToGenerate; i++) {
                 let date = new Date(baseDate);
                 date.setMonth(baseDate.getMonth() + i);
 
-                // Adjust day if it exceeds month length
+                // Adjust day to target day
                 const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
                 const purchaseDay = Math.min(targetDay, daysInMonth);
                 date.setDate(purchaseDay);
 
-                // Smart Dating for Credit Cards
-                if (transaction.paymentMethod === 'credit' && transaction.cardId) {
-                    const card = cards.find(c => c.id === transaction.cardId);
-
-                    if (card) {
-                        const closingDay = Number(card.closingDay);
-                        const dueDay = Number(card.dueDay);
-
-                        if (purchaseDay >= closingDay) {
-                            // Move to next month's due date
-                            date.setMonth(date.getMonth() + 1);
-                        }
-
-                        // Set to Due Day
-                        const targetMonthDays = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-                        date.setDate(Math.min(dueDay, targetMonthDays));
-                    }
-                }
+                // Adjust for Smart Dating
+                const finalDate = date.toISOString();
 
                 newTransactions.push({
                     ...transaction,
                     id: crypto.randomUUID(),
-                    date: date.toISOString(),
+                    date: finalDate,
                     isPaid: i === 0 ? transaction.isPaid : false,
                 });
             }
             setTransactions((prev) => [...newTransactions, ...prev]);
         } else {
-            setTransactions((prev) => [transaction, ...prev]);
+            // Single Transaction
+            const finalDate = new Date(transaction.date).toISOString();
+
+            setTransactions((prev) => [{
+                ...transaction,
+                date: finalDate
+            }, ...prev]);
         }
 
         // Update account balance if transaction is paid via account

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, getDay, parseISO, startOfWeek, endOfWeek } from "date-fns"; import { ChevronLeft, ChevronRight, ArrowDownLeft, ArrowUpRight, Calendar as CalendarIcon, CreditCard as CreditCardIcon } from "lucide-react";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, getDay, parseISO, startOfWeek, endOfWeek } from "date-fns"; import { ChevronLeft, ChevronRight, ArrowDownLeft, ArrowUpRight, Calendar as CalendarIcon, CreditCard as CreditCardIcon, Wallet } from "lucide-react";
 import { useFinance } from "@/contexts/FinanceContext";
 import { cn } from "@/lib/utils";
 import { Transaction, CreditCard } from "@/types";
@@ -9,10 +9,11 @@ import { getBrandById } from "@/lib/brands";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CalendarPage() {
-    const { transactions, cards } = useFinance();
+    const { transactions, cards, appContext } = useFinance();
     const { t, locale } = useLanguage();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+    const [filterMode, setFilterMode] = useState<'cash_flow' | 'future_expenses' | 'card_charges'>('cash_flow');
 
     const firstDayOfMonth = startOfMonth(currentDate);
     const lastDayOfMonth = endOfMonth(currentDate);
@@ -28,7 +29,21 @@ export default function CalendarPage() {
     const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
 
     const getTransactionsForDate = (date: Date) => {
-        return transactions.filter(t => isSameDay(new Date(t.date), date));
+        return transactions.filter(t => {
+            const isDateMatch = isSameDay(new Date(t.date), date);
+            if (!isDateMatch) return false;
+
+            if (filterMode === 'card_charges') {
+                return t.paymentMethod === 'credit';
+            }
+
+            // For Cash Flow and Future Expenses, HIDE credit card purchases (they appear as invoices)
+            if (filterMode === 'cash_flow' || filterMode === 'future_expenses') {
+                return t.paymentMethod !== 'credit';
+            }
+
+            return true;
+        });
     };
 
     // Helper to calculate invoice total for a specific card and due date
@@ -64,25 +79,38 @@ export default function CalendarPage() {
 
     // Get invoices due on a specific date
     const getInvoicesForDate = (date: Date) => {
+        // In 'card_charges' mode, we don't show invoices, we show individual charges
+        if (filterMode === 'card_charges') return [];
+
         return cards.filter(card => {
-            // Check if this date is the due date for this card
-            // We need to handle month overflow if due day > days in month?
-            // For simplicity, just check day match.
             return date.getDate() === Number(card.dueDay);
         }).map(card => ({
             card,
             amount: getInvoiceTotal(card, date)
-        })).filter(invoice => invoice.amount > 0); // Only show if there's an amount
+        })).filter(invoice => invoice.amount > 0);
     };
 
     const selectedDateTransactions = selectedDate ? getTransactionsForDate(selectedDate) : [];
     const selectedDateInvoices = selectedDate ? getInvoicesForDate(selectedDate) : [];
 
-    // Calculate daily totals for the month (excluding invoices to avoid double counting visually if we wanted, but here we just sum transactions)
+    // Calculate daily totals for the month
     const getDailyTotal = (date: Date) => {
         const txs = getTransactionsForDate(date);
-        const income = txs.filter(t => t.type === 'income').reduce((acc, curr) => acc + curr.amount, 0);
-        const expense = txs.filter(t => t.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
+        const invoices = getInvoicesForDate(date);
+
+        // Calculate transaction totals
+        let income = txs.filter(t => t.type === 'income').reduce((acc, curr) => acc + curr.amount, 0);
+        let expense = txs.filter(t => t.type === 'expense').reduce((acc, curr) => acc + curr.amount, 0);
+
+        // Add invoice totals to expense
+        const invoiceTotal = invoices.reduce((acc, inv) => acc + inv.amount, 0);
+        expense += invoiceTotal;
+
+        // Filter logic for totals
+        if (filterMode === 'future_expenses') {
+            income = 0; // Hide income in Future Expenses
+        }
+
         return { income, expense, balance: income - expense };
     };
 
@@ -94,20 +122,59 @@ export default function CalendarPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-2xl font-bold text-foreground">{t('calendar')}</h2>
-                    <p className="text-muted-foreground">{t('calendar_subtitle')}</p>
+            <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-2xl font-bold text-foreground">{t('calendar')}</h2>
+                        <p className="text-muted-foreground">{t('calendar_subtitle')}</p>
+                    </div>
+                    <div className="flex items-center gap-4 bg-card p-1 rounded-xl border border-border shadow-sm">
+                        <button onClick={prevMonth} className="p-2 hover:bg-muted rounded-lg transition-colors">
+                            <ChevronLeft size={20} />
+                        </button>
+                        <span className="font-semibold min-w-[140px] text-center capitalize">
+                            {format(currentDate, 'MMMM yyyy', { locale })}
+                        </span>
+                        <button onClick={nextMonth} className="p-2 hover:bg-muted rounded-lg transition-colors">
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
                 </div>
-                <div className="flex items-center gap-4 bg-card p-1 rounded-xl border border-border shadow-sm">
-                    <button onClick={prevMonth} className="p-2 hover:bg-muted rounded-lg transition-colors">
-                        <ChevronLeft size={20} />
+
+                {/* Filter Menu */}
+                <div className="flex p-1 bg-muted/50 rounded-xl w-fit">
+                    <button
+                        onClick={() => setFilterMode('cash_flow')}
+                        className={cn(
+                            "px-4 py-2 text-sm font-medium rounded-lg transition-all",
+                            filterMode === 'cash_flow'
+                                ? (appContext === 'PF' ? "bg-orange-500 text-white shadow-md" : "bg-blue-600 text-white shadow-md")
+                                : "text-muted-foreground hover:text-foreground"
+                        )}
+                    >
+                        Fluxo de Caixa
                     </button>
-                    <span className="font-semibold min-w-[140px] text-center capitalize">
-                        {format(currentDate, 'MMMM yyyy', { locale })}
-                    </span>
-                    <button onClick={nextMonth} className="p-2 hover:bg-muted rounded-lg transition-colors">
-                        <ChevronRight size={20} />
+                    <button
+                        onClick={() => setFilterMode('future_expenses')}
+                        className={cn(
+                            "px-4 py-2 text-sm font-medium rounded-lg transition-all",
+                            filterMode === 'future_expenses'
+                                ? (appContext === 'PF' ? "bg-orange-500 text-white shadow-md" : "bg-blue-600 text-white shadow-md")
+                                : "text-muted-foreground hover:text-foreground"
+                        )}
+                    >
+                        Despesas Futuras
+                    </button>
+                    <button
+                        onClick={() => setFilterMode('card_charges')}
+                        className={cn(
+                            "px-4 py-2 text-sm font-medium rounded-lg transition-all",
+                            filterMode === 'card_charges'
+                                ? (appContext === 'PF' ? "bg-orange-500 text-white shadow-md" : "bg-blue-600 text-white shadow-md")
+                                : "text-muted-foreground hover:text-foreground"
+                        )}
+                    >
+                        Mensalidades no Cartão
                     </button>
                 </div>
             </div>
@@ -211,7 +278,11 @@ export default function CalendarPage() {
                                                     // eslint-disable-next-line @next/next/no-img-element
                                                     <img src={brand.logoUrl} alt={brand.name} className="w-6 h-6 object-contain" />
                                                 ) : (
-                                                    transaction.type === 'income' ? <ArrowUpRight size={20} /> : <ArrowDownLeft size={20} />
+                                                    // Icon Logic:
+                                                    // If Card Charges mode -> CreditCard Icon
+                                                    // If Cash Flow/Future -> Wallet Icon (since these are actual money movements)
+                                                    filterMode === 'card_charges' ? <CreditCardIcon size={20} /> :
+                                                        transaction.type === 'income' ? <ArrowUpRight size={20} /> : <Wallet size={20} />
                                                 )}
                                             </div>
                                             <div className="flex-1 min-w-0">
@@ -229,13 +300,15 @@ export default function CalendarPage() {
                                 })}
 
                                 <div className="pt-4 border-t border-border mt-4">
-                                    <div className="flex justify-between text-sm mb-2">
-                                        <span className="text-muted-foreground">{t('inflows')}</span>
-                                        <span className="text-green-600 dark:text-green-400 font-medium">
-                                            {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(selectedDateTransactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + curr.amount, 0)
-                                            )}
-                                        </span>
-                                    </div>
+                                    {filterMode !== 'future_expenses' && (
+                                        <div className="flex justify-between text-sm mb-2">
+                                            <span className="text-muted-foreground">{t('inflows')}</span>
+                                            <span className="text-green-600 dark:text-green-400 font-medium">
+                                                {new Intl.NumberFormat(locale.code === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: locale.code === 'pt-BR' ? 'BRL' : 'USD' }).format(selectedDateTransactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + curr.amount, 0)
+                                                )}
+                                            </span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between text-sm mb-2">
                                         <span className="text-muted-foreground">{t('outflows')}</span>
                                         <span className="text-red-600 dark:text-red-400 font-medium">

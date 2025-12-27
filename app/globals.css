@@ -122,6 +122,43 @@
     --sidebar-foreground: 343 42% 15%;
 
   }
+
+  /* Personal Context (PF) - Orange Theme */
+  [data-context="PF"] {
+    --primary: 24.6 95% 53.1%;
+    /* orange-500 */
+    --primary-foreground: 60 9.1% 97.8%;
+    --ring: 24.6 95% 53.1%;
+
+    /* Light mode background tint - Light Orange */
+    --background: 33 100% 96%;
+  }
+
+  /* Business Context (PJ) - Blue Theme */
+  [data-context="PJ"] {
+    --primary: 221.2 83.2% 53.3%;
+    /* blue-600 */
+    --primary-foreground: 210 40% 98%;
+    --ring: 221.2 83.2% 53.3%;
+
+    /* Light mode background tint - Light Slate/Blue */
+    --background: 210 40% 96.1%;
+  }
+
+  /* Dark Mode Overrides for Contexts */
+  .dark [data-context="PF"] {
+    --background: 20 14.3% 4.1%;
+    /* Darker orange/brown tint */
+    --primary: 20.5 90.2% 48.2%;
+    /* orange-600 */
+  }
+
+  .dark [data-context="PJ"] {
+    --background: 222.2 84% 4.9%;
+    /* slate-950 (default dark) */
+    --primary: 217.2 91.2% 59.8%;
+    /* blue-500 */
+  }
 }
 
 body {
