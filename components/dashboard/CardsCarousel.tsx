@@ -44,7 +44,7 @@ export default function CardsCarousel({
     };
 
     return (
-        <div className="w-full overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+        <div className="overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
             <div className="flex gap-4 min-w-max">
                 {cards.map((card) => (
                     <div key={card.id} className="w-[300px] md:w-[340px]">

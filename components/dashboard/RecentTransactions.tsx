@@ -60,27 +60,27 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
             <div className="space-y-6">
                 {recent.map((transaction) => (
                     <div key={transaction.id} className="flex items-center justify-between group">
-                        <div className="flex items-center gap-4">
-                            <div className={`p-3 rounded-xl ${transaction.type === 'income'
+                        <div className="flex items-center gap-4 min-w-0 flex-1">
+                            <div className={`p-3 rounded-xl flex-shrink-0 ${transaction.type === 'income'
                                 ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
                                 : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
                                 }`}>
                                 {transaction.type === 'income' ? <ArrowUpRight size={20} /> : <ArrowDownLeft size={20} />}
                             </div>
-                            <div>
-                                <p className="font-medium text-foreground group-hover:text-primary transition-colors">
+                            <div className="min-w-0 flex-1">
+                                <p className="font-medium text-foreground group-hover:text-primary transition-colors truncate">
                                     {transaction.description}
                                     {transaction.installments && (
                                         <span className="ml-2 text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">                                            {transaction.installments.current}/{transaction.installments.total}
                                         </span>
                                     )}
                                 </p>
-                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <span>{transaction.category}</span>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground truncate">
+                                    <span className="truncate">{transaction.category}</span>
                                     <span>•</span>
-                                    <span>{format(parseISO(transaction.date), "d 'de' MMM", { locale })}</span>
+                                    <span className="whitespace-nowrap">{format(parseISO(transaction.date), "d 'de' MMM", { locale })}</span>
                                     {transaction.status === 'pending' && (
-                                        <span className="text-orange-500 bg-orange-50 px-1.5 rounded">{t('pending')}</span>)}
+                                        <span className="text-orange-500 bg-orange-50 px-1.5 rounded whitespace-nowrap">{t('pending')}</span>)}
                                 </div>
                             </div>
                         </div>

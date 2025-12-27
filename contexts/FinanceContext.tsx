@@ -227,7 +227,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         // Let's assume we want to flip the status to 'paid' (or 'confirmed') when the date arrives.
 
         const transactionsToUpdate = transactions.filter(t => {
-            if (t.subType !== 'subscription' || t.isPaid) return false;
+            if (t.subType !== 'subscription' || t.isPaid || t.status === 'paid') return false;
 
             const tDate = new Date(t.date);
             // Check if it's due today or in the past (but same month)

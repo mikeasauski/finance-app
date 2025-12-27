@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, LogOut, FileText, Settings, CreditCard, Calendar, Wallet } from "lucide-react";
+import { Menu, X, LogOut, Settings, CreditCard, Calendar, Wallet, LayoutDashboard, ArrowLeftRight, Target, Calculator, BarChart } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Link from "next/link";
@@ -15,10 +15,14 @@ export default function MobileHeader() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const drawerItems = [
+        { name: t("dashboard"), href: "/", icon: LayoutDashboard },
+        { name: t("transactions"), href: "/transactions", icon: ArrowLeftRight },
         { name: t("wallet"), href: "/cards", icon: CreditCard },
         { name: t("calendar"), href: "/calendar", icon: Calendar },
+        { name: t("reports"), href: "/reports", icon: BarChart },
+        { name: t("planning"), href: "/planning", icon: Target },
         { name: t("income"), href: "/income", icon: Wallet },
-        { name: t("reports"), href: "/reports", icon: FileText },
+        { name: "Ferramentas", href: "/tools", icon: Calculator },
         { name: t("settings"), href: "/settings", icon: Settings },
     ];
 

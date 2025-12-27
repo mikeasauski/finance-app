@@ -125,7 +125,7 @@ export default function CreditCardWidget({ card, currentInvoice, onEdit, onDelet
             </div>
 
             <div className="mb-4">
-                <h4 className={`text-xs mb-0.5 ${subTextColor}`}>{card.name}</h4>
+                <h4 className={`text-xs mb-0.5 ${subTextColor} truncate`}>{card.name}</h4>
                 <p className="text-lg font-bold tracking-wider">**** **** **** 1234</p>
             </div>
 

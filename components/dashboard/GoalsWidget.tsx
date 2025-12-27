@@ -73,7 +73,7 @@ export default function GoalsWidget() {
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex justify-between items-center mb-1">
-                                        <h4 className="font-semibold text-foreground">{goal.name}</h4>
+                                        <h4 className="font-semibold text-foreground truncate">{goal.name}</h4>
                                         <span className={`text-sm font-bold ${colors.text}`}>{percentage}%</span>
                                     </div>
                                     <p className="text-xs text-muted-foreground mb-2">

@@ -80,9 +80,9 @@ export default function Dashboard() {
     const filteredCards = cards.filter(c => c.context === context);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-full">
             {/* Context Switcher */}
-            <div className="flex justify-end">
+            <div className="flex justify-center w-full relative">
                 <div className="bg-muted p-1 rounded-full inline-flex">
                     <button
                         onClick={() => setContext('PF')}
@@ -106,13 +106,13 @@ export default function Dashboard() {
             </div >
 
             {/* Header */}
-            < div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10 mt-8 md:mt-0" >
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 relative z-10 mt-4 md:mt-0 text-center md:text-left">
                 <div>
                     <h2 className="text-2xl font-bold text-foreground">{t('dashboard')}</h2>
                     <p className="text-muted-foreground">{t('dashboard_subtitle')}</p>
                 </div>
 
-                <div className="flex items-center gap-4 w-full md:w-auto justify-end">
+                <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-end">
                     <button
                         onClick={() => setIsFormOpen(true)}
                         className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-colors shadow-lg shadow-primary/20"

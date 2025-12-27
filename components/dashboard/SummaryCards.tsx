@@ -92,7 +92,7 @@ export default function SummaryCards({ context }: SummaryCardsProps) {
                             Runway estimado: <span className="font-bold text-foreground">{runwayDays} dias</span>
                         </p>
                     ) : (
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="text-xs text-muted-foreground mt-2 break-words">
                             Liberdade Financeira: <span className="font-bold text-foreground">{financialFreedomMonths} meses</span>
                         </p>
                     )}

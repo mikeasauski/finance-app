@@ -17,6 +17,7 @@ export default function MobileNav() {
     const navItems = [
         { name: t("dashboard"), href: "/", icon: LayoutDashboard },
         { name: t("transactions"), href: "/transactions", icon: ArrowLeftRight },
+        { name: t("wallet"), href: "/cards", icon: CreditCard },
         { name: "FAB", href: "#", icon: Plus }, // Placeholder for FAB logic
         { name: t("planning"), href: "/planning", icon: Target },
         { name: "Ferramentas", href: "/tools", icon: Calculator },
@@ -30,7 +31,7 @@ export default function MobileNav() {
                     {navItems.map((item, index) => {
                         if (item.name === "FAB") {
                             return (
-                                <div key={index} className="relative -top-6">
+                                <div key={index} className="relative -top-6 flex justify-center w-[14%]">
                                     <button
                                         onClick={() => setIsTransactionModalOpen(true)}
                                         className="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/30 hover:scale-105 transition-transform"
@@ -47,12 +48,12 @@ export default function MobileNav() {
                                 key={item.href}
                                 href={item.href}
                                 className={cn(
-                                    "flex flex-col items-center gap-1 p-2 min-w-[64px]",
+                                    "flex flex-col items-center gap-1 p-2 w-[14%]",
                                     isActive ? "text-primary" : "text-gray-500"
                                 )}
                             >
-                                <item.icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                                <span className="text-[10px] font-medium">{item.name}</span>
+                                <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                                <span className="text-[9px] font-medium truncate w-full text-center">{item.name}</span>
                             </Link>
                         );
                     })}

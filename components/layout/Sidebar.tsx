@@ -22,11 +22,13 @@ import TransactionForm from "@/components/forms/TransactionForm";
 import { useUser } from "@/contexts/UserContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+import { useSidebar } from "@/contexts/SidebarContext";
+
 export default function Sidebar() {
     const { user, logout } = useUser();
     const { t } = useLanguage();
     const pathname = usePathname();
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const { isCollapsed, toggleSidebar } = useSidebar();
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
 
     const navItems = [
@@ -58,7 +60,7 @@ export default function Sidebar() {
                             </h1>
                         )}
                         <button
-                            onClick={() => setIsCollapsed(!isCollapsed)}
+                            onClick={toggleSidebar}
                             className={cn(
                                 "p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors",
                                 isCollapsed && "mx-auto"

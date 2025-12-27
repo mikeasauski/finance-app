@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function WeeklyBills() {
     const { transactions, updateTransaction, accounts } = useFinance();
-    const { t, locale } = useLanguage();    const [selectedBill, setSelectedBill] = useState<Transaction | null>(null);
+    const { t, locale } = useLanguage(); const [selectedBill, setSelectedBill] = useState<Transaction | null>(null);
 
     // Filter pending expenses
     const pendingBills = transactions.filter(t =>
@@ -29,7 +29,8 @@ export default function WeeklyBills() {
     }).sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
 
     const handlePay = (bill: Transaction) => {
-        if (confirm(t('mark_as_paid_confirm', { description: bill.description }))) {            updateTransaction({
+        if (confirm(t('mark_as_paid_confirm', { description: bill.description }))) {
+            updateTransaction({
                 ...bill,
                 isPaid: true,
                 status: 'paid'
@@ -51,7 +52,7 @@ export default function WeeklyBills() {
     // Group by day
     const groupedBills: Record<string, Transaction[]> = {};
     billsThisWeek.forEach(bill => {
-        const dateKey = format(parseISO(bill.date), 'yyyy-MM-dd');        if (!groupedBills[dateKey]) {
+        const dateKey = format(parseISO(bill.date), 'yyyy-MM-dd'); if (!groupedBills[dateKey]) {
             groupedBills[dateKey] = [];
         }
         groupedBills[dateKey].push(bill);
@@ -85,16 +86,16 @@ export default function WeeklyBills() {
                             <div className="space-y-3">
                                 {bills.map(bill => (
                                     <div key={bill.id} className="group flex items-center justify-between p-3 rounded-xl border border-border hover:border-primary/20 hover:bg-muted/50 transition-all">
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-3 min-w-0 flex-1">
                                             <div className={cn(
-                                                "w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold",
-                                                isSameDay(parseISO(bill.date), today) ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" : "bg-muted text-muted-foreground"                                            )}>
+                                                "w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0",
+                                                isSameDay(parseISO(bill.date), today) ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" : "bg-muted text-muted-foreground")}>
                                                 {/* Icon or Initials */}
                                                 {bill.description.substring(0, 1).toUpperCase()}
                                             </div>
-                                            <div>
-                                                <p className="font-medium text-foreground text-sm">{bill.description}</p>
-                                                <p className="text-xs text-muted-foreground">{bill.category}</p>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="font-medium text-foreground text-sm truncate">{bill.description}</p>
+                                                <p className="text-xs text-muted-foreground truncate">{bill.category}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4">

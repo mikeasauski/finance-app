@@ -9,6 +9,7 @@ import { UserProvider } from "@/contexts/UserContext";
 import AuthGuard from "@/components/layout/AuthGuard";
 import LayoutContent from "@/components/layout/LayoutContent";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { SidebarProvider } from "@/contexts/SidebarContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,9 +33,11 @@ export default function RootLayout({
                                 <LanguageProvider>
                                     <UserProvider>
                                         <AuthGuard>
-                                            <LayoutContent>
-                                                {children}
-                                            </LayoutContent>
+                                            <SidebarProvider>
+                                                <LayoutContent>
+                                                    {children}
+                                                </LayoutContent>
+                                            </SidebarProvider>
                                         </AuthGuard>
                                     </UserProvider>
                                 </LanguageProvider>
