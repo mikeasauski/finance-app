@@ -82,12 +82,12 @@ export default function Dashboard() {
     return (
         <div className="space-y-6 max-w-full">
             {/* Context Switcher */}
-            <div className="flex justify-center w-full relative">
+            <div className="flex justify-center w-full relative z-20">
                 <div className="bg-muted p-1 rounded-full inline-flex">
                     <button
                         onClick={() => setContext('PF')}
                         className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PF'
-                            ? 'bg-orange-500 text-white shadow-md transform scale-105'
+                            ? 'bg-blue-600 text-white shadow-md transform scale-105'
                             : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                             } `}
                     >
@@ -96,7 +96,7 @@ export default function Dashboard() {
                     <button
                         onClick={() => setContext('PJ')}
                         className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PJ'
-                            ? 'bg-blue-600 text-white shadow-md transform scale-105'
+                            ? 'bg-orange-500 text-white shadow-md transform scale-105'
                             : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                             } `}
                     >

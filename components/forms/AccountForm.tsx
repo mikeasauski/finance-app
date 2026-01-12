@@ -69,25 +69,25 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
             <div>
                 <label className="block text-xs font-medium text-muted-foreground mb-2">Tipo de Conta</label>
                 <div className="flex p-1 bg-muted rounded-xl">                    <button
-                        type="button"
-                        onClick={() => setContext('PF')}
-                        className={cn(
-                            "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
-                            context === 'PF'
-                                ? "bg-card text-blue-600 shadow-sm"
-                                : "text-muted-foreground hover:text-foreground"                        )}
-                    >
-                        <User size={18} />
-                        Pessoal
-                    </button>
+                    type="button"
+                    onClick={() => setContext('PF')}
+                    className={cn(
+                        "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
+                        context === 'PF'
+                            ? "bg-card text-blue-600 shadow-sm"
+                            : "text-muted-foreground hover:text-foreground")}
+                >
+                    <User size={18} />
+                    Pessoal
+                </button>
                     <button
                         type="button"
                         onClick={() => setContext('PJ')}
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             context === 'PJ'
-                                ? "bg-card text-blue-600 shadow-sm"
-                                : "text-muted-foreground hover:text-foreground"                        )}
+                                ? "bg-card text-orange-500 shadow-sm"
+                                : "text-muted-foreground hover:text-foreground")}
                     >
                         <Briefcase size={18} />
                         Empresarial
@@ -130,7 +130,7 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full p-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background text-foreground"                    placeholder="Ex: Nubank Principal"
+                    className="w-full p-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background text-foreground" placeholder="Ex: Nubank Principal"
                 />
             </div>
 
@@ -142,7 +142,7 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
                         type="number"
                         value={initialBalance}
                         onChange={(e) => setInitialBalance(e.target.value)}
-                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg font-semibold text-foreground"                        placeholder="0,00"
+                        className="w-full pl-10 p-2 bg-background border border-border rounded-lg font-semibold text-foreground" placeholder="0,00"
                         required
                     />
                 </div>
@@ -150,14 +150,14 @@ export default function AccountForm({ onClose, initialData }: AccountFormProps) 
 
             {/* Favorite Toggle */}
             <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-100 dark:border-yellow-900/30">                <button
-                    type="button"
-                    onClick={() => setIsFavorite(!isFavorite)}
-                    className={cn(
-                        "p-2 rounded-full transition-colors",
-                        isFavorite ? "bg-yellow-400 text-white shadow-sm" : "bg-card text-muted-foreground border border-border"                    )}
-                >
-                    <Star size={20} fill={isFavorite ? "currentColor" : "none"} />
-                </button>
+                type="button"
+                onClick={() => setIsFavorite(!isFavorite)}
+                className={cn(
+                    "p-2 rounded-full transition-colors",
+                    isFavorite ? "bg-yellow-400 text-white shadow-sm" : "bg-card text-muted-foreground border border-border")}
+            >
+                <Star size={20} fill={isFavorite ? "currentColor" : "none"} />
+            </button>
                 <div>
                     <p className="text-sm font-medium text-foreground">Conta Favorita</p>
                     <p className="text-xs text-muted-foreground">Sugerir esta conta em novos lançamentos</p>                </div>

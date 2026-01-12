@@ -104,7 +104,7 @@ export default function CreditCardForm({ onClose, initialData }: CreditCardFormP
                         className={cn(
                             "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
                             context === 'PJ'
-                                ? "bg-card text-blue-600 shadow-sm"
+                                ? "bg-card text-orange-500 shadow-sm"
                                 : "text-muted-foreground hover:text-foreground")}
                     >
                         <Briefcase size={18} />
