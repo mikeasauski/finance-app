@@ -9,6 +9,7 @@ import { BalanceChart } from "./BalanceChart";
 import UpcomingExpenses from "./UpcomingExpenses";
 import { ContextType } from "@/types";
 import { useFinance } from "@/contexts/FinanceContext";
+import { useUser } from "@/contexts/UserContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 import TransactionForm from "../forms/TransactionForm";
@@ -23,6 +24,7 @@ import ProlaboreModal from "../modals/ProlaboreModal";
 
 export default function Dashboard() {
     const { t } = useLanguage();
+    const { user } = useUser();
     const { transactions, cards, removeCard, appContext: context, setAppContext: setContext, addTransaction, accounts } = useFinance();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isCardFormOpen, setIsCardFormOpen] = useState(false);
@@ -63,6 +65,15 @@ export default function Dashboard() {
         };
     }, [isFormOpen, isCardFormOpen, isProlaboreModalOpen, selectedInvoiceCard, editingCard]);
 
+    // Force context based on usageMode
+    useEffect(() => {
+        if (user?.usageMode === 'PF' && context !== 'PF') {
+            setContext('PF');
+        } else if (user?.usageMode === 'PJ' && context !== 'PJ') {
+            setContext('PJ');
+        }
+    }, [user?.usageMode, context, setContext]);
+
     // Calculate Balance
     const balance = transactions
         .filter(t => t.context === context && t.isPaid)
@@ -82,28 +93,30 @@ export default function Dashboard() {
     return (
         <div className="space-y-6 max-w-full">
             {/* Context Switcher */}
-            <div className="flex justify-center w-full relative z-20">
-                <div className="bg-muted p-1 rounded-full inline-flex">
-                    <button
-                        onClick={() => setContext('PF')}
-                        className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PF'
-                            ? 'bg-blue-600 text-white shadow-md transform scale-105'
-                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                            } `}
-                    >
-                        {t('personal')}
-                    </button>
-                    <button
-                        onClick={() => setContext('PJ')}
-                        className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PJ'
-                            ? 'bg-orange-500 text-white shadow-md transform scale-105'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                            } `}
-                    >
-                        {t('business')}
-                    </button>
+            {user?.usageMode === 'BOTH' && (
+                <div className="flex justify-center w-full relative z-20">
+                    <div className="bg-muted p-1 rounded-full inline-flex">
+                        <button
+                            onClick={() => setContext('PF')}
+                            className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PF'
+                                ? 'bg-orange-500 text-white shadow-md transform scale-105'
+                                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                                } `}
+                        >
+                            {t('personal')}
+                        </button>
+                        <button
+                            onClick={() => setContext('PJ')}
+                            className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${context === 'PJ'
+                                ? 'bg-blue-600 text-white shadow-md transform scale-105'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                                } `}
+                        >
+                            {t('business')}
+                        </button>
+                    </div >
                 </div >
-            </div >
+            )}
 
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 relative z-10 mt-4 md:mt-0 text-center md:text-left">

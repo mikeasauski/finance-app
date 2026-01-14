@@ -1,4 +1,5 @@
 export type ContextType = 'PF' | 'PJ';
+export type UsageMode = 'PF' | 'PJ' | 'BOTH';
 
 export type TransactionType = 'income' | 'expense';
 

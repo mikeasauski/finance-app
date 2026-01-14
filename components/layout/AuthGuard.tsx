@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-    const { isAuthenticated, hasProfile } = useUser();
+    const { isAuthenticated, hasProfile, user } = useUser();
     const router = useRouter();
     const pathname = usePathname();
 
@@ -16,11 +16,18 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         // If not authenticated, redirect to login
         if (!isAuthenticated) {
             router.push("/login");
+            return;
         }
-    }, [isAuthenticated, pathname, router]);
 
-    // If on login page, render children (the login page itself)
-    if (pathname === "/login") {
+        // If authenticated but no usageMode, redirect to onboarding
+        // Allow access to onboarding page itself to avoid loop
+        if (isAuthenticated && !user?.usageMode && pathname !== "/onboarding") {
+            router.push("/onboarding");
+        }
+    }, [isAuthenticated, pathname, router, user]);
+
+    // If on login or onboarding page, render children
+    if (pathname === "/login" || pathname === "/onboarding") {
         return <>{children}</>;
     }
 

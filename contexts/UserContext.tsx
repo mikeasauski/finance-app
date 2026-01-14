@@ -7,6 +7,9 @@ interface UserProfile {
     photo?: string;
     pin: string;
     email?: string;
+    usageMode?: 'PF' | 'PJ' | 'BOTH';
+    companyName?: string;
+    companyLogo?: string;
 }
 
 interface UserContextType {
